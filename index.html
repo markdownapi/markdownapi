@@ -508,6 +508,69 @@
             margin: 0;
         }
 
+        /* MCP Section */
+        .mcp-section {
+            padding: 4rem 0 5rem;
+            background: var(--warm-white);
+            border-top: 1px solid var(--sand);
+        }
+
+        .comparison-card.mcp-card {
+            background: #F5F3F9;
+            border: 1px solid #D8D3E6;
+        }
+
+        .comparison-card.mcp-card h3 {
+            color: #6B5B8C;
+        }
+
+        .comparison-card.mapi-card {
+            background: #F3F8F6;
+            border: 1px solid #C5DDD5;
+        }
+
+        .comparison-card.mapi-card h3 {
+            color: var(--teal);
+        }
+
+        .card-tagline {
+            font-size: 0.9rem;
+            color: var(--light-charcoal);
+            font-style: italic;
+            margin-bottom: 1.25rem;
+            opacity: 0.85;
+        }
+
+        .mcp-callout {
+            background: linear-gradient(135deg, var(--teal) 0%, #1D5C5C 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+        }
+
+        .mcp-callout h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .mcp-callout p {
+            font-size: 1rem;
+            line-height: 1.65;
+            opacity: 0.95;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .mcp-callout p:last-child {
+            margin-bottom: 0;
+        }
+
+        .mcp-example {
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.95rem;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .main-nav {
@@ -741,6 +804,46 @@
                     <div>
                         <h4>Built for the AI era</h4>
                         <p>MAPI's <strong>Intentions</strong> explain when to use each capability. <strong>Logic Constraints</strong> make business rules explicit. LLMs don't hallucinate endpoints—they understand your API.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mcp-section" id="mapi-and-mcp">
+            <div class="container">
+                <div class="section-header">
+                    <h2>MAPI and MCP: Complementary, Not Competing</h2>
+                    <p>When people think about APIs and LLMs, they often think of MCP (Model Context Protocol). Here's how the two relate.</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card mcp-card">
+                        <h3>MCP: The Runtime Protocol</h3>
+                        <p class="card-tagline">How LLMs invoke tools</p>
+                        <ul>
+                            <li><strong>Transport layer</strong> — Defines the wire format, handshake, and request/response flow</li>
+                            <li><strong>Tool invocation</strong> — How an LLM connects to and calls external capabilities</li>
+                            <li><strong>Runtime concern</strong> — Active during execution, handling the actual API calls</li>
+                            <li><strong>Analogous to</strong> — HTTP, gRPC, WebSocket protocols</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card mapi-card">
+                        <h3>MAPI: The Description Format</h3>
+                        <p class="card-tagline">How LLMs understand APIs</p>
+                        <ul>
+                            <li><strong>Documentation layer</strong> — Describes what an API does, when to use it, and why</li>
+                            <li><strong>Semantic understanding</strong> — Intentions, auth context, and business rules in prose</li>
+                            <li><strong>Design-time concern</strong> — Consumed before execution, informing decisions</li>
+                            <li><strong>Analogous to</strong> — OpenAPI, API documentation, developer guides</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mcp-callout">
+                    <div class="mcp-callout-content">
+                        <h4>They work together</h4>
+                        <p>MCP tools have names and JSON schemas, but schemas don't explain <em>when</em> to choose one tool over another, <em>what scopes</em> you need, or <em>why</em> the API works the way it does. That's what MAPI provides—the semantic context that helps LLMs reason about API usage, not just execute it.</p>
+                        <p class="mcp-example">An agent might read a <strong>MAPI spec</strong> to understand an API's capabilities, then use <strong>MCP</strong> (or HTTP) to invoke them.</p>
                     </div>
                 </div>
             </div>
