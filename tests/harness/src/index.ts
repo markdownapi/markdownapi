@@ -12,6 +12,15 @@
  * - Results recorded as-is
  */
 
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
+
+// Load environment variables from .env.local in project root
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+config({ path: path.resolve(__dirname, '../../../.env.local') });
+
 import { Command } from 'commander';
 import { runTests, saveResults } from './runner.js';
 import { ModelTier, SpecFormat, ApiName, TestRunResult } from './types.js';
@@ -29,10 +38,12 @@ program
   .requiredOption('-m, --model <tier>', 'Model tier: haiku, sonnet, or opus')
   .requiredOption('-s, --spec <format>', 'Spec format: openapi or mapi')
   .requiredOption('-a, --api <name>', 'API name: anthropic, github, notion, or google-cloud')
+  .option('-l, --limit <count>', 'Limit number of tests to run')
   .action(async (options) => {
     const model = options.model as ModelTier;
     const spec_format = options.spec as SpecFormat;
     const api = options.api as ApiName;
+    const limit = options.limit ? parseInt(options.limit, 10) : undefined;
 
     // Validate inputs
     if (!['haiku', 'sonnet', 'opus'].includes(model)) {
@@ -52,7 +63,7 @@ program
     console.log('  MAPI Test Harness - A/B Spec Comprehension Test');
     console.log('═══════════════════════════════════════════════════════════');
 
-    const result = await runTests({ model, spec_format, api });
+    const result = await runTests({ model, spec_format, api }, limit);
     const filepath = saveResults(result);
 
     printSummary(result);
@@ -64,9 +75,11 @@ program
   .description('Run both OpenAPI and MAPI tests and compare results')
   .requiredOption('-m, --model <tier>', 'Model tier: haiku, sonnet, or opus')
   .requiredOption('-a, --api <name>', 'API name: anthropic, github, notion, or google-cloud')
+  .option('-l, --limit <count>', 'Limit number of tests to run')
   .action(async (options) => {
     const model = options.model as ModelTier;
     const api = options.api as ApiName;
+    const limit = options.limit ? parseInt(options.limit, 10) : undefined;
 
     console.log('═══════════════════════════════════════════════════════════');
     console.log('  MAPI Test Harness - A/B Comparison');
@@ -74,12 +87,12 @@ program
 
     // Run OpenAPI tests
     console.log('\n--- OpenAPI Tests ---');
-    const openApiResult = await runTests({ model, spec_format: 'openapi', api });
+    const openApiResult = await runTests({ model, spec_format: 'openapi', api }, limit);
     saveResults(openApiResult);
 
     // Run MAPI tests
     console.log('\n--- MAPI Tests ---');
-    const mapiResult = await runTests({ model, spec_format: 'mapi', api });
+    const mapiResult = await runTests({ model, spec_format: 'mapi', api }, limit);
     saveResults(mapiResult);
 
     // Print comparison
@@ -133,7 +146,21 @@ function printSummary(result: TestRunResult): void {
   console.log(`  Total tokens:   ${summary.total_input_tokens + summary.total_output_tokens}`);
 }
 
+function formatTime(ms: number): string {
+  const seconds = ms / 1000;
+  if (seconds < 60) {
+    return `${seconds.toFixed(1)}s`;
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = (seconds % 60).toFixed(0);
+  return `${minutes}m ${remainingSeconds}s`;
+}
+
 function printComparison(openapi: TestRunResult, mapi: TestRunResult): void {
+  // Calculate total test time from individual test latencies (excludes judge time)
+  const openApiTestTime = openapi.summary.avg_latency_ms * openapi.summary.total;
+  const mapiTestTime = mapi.summary.avg_latency_ms * mapi.summary.total;
+
   console.log('\n═══════════════════════════════════════════════════════════');
   console.log('  A/B Comparison Results');
   console.log('═══════════════════════════════════════════════════════════');
@@ -145,6 +172,9 @@ function printComparison(openapi: TestRunResult, mapi: TestRunResult): void {
   console.log(`  Incorrect:        ${String(openapi.summary.incorrect).padStart(5)}          ${String(mapi.summary.incorrect).padStart(5)}`);
   console.log(`  Parse errors:     ${String(openapi.summary.parse_errors).padStart(5)}          ${String(mapi.summary.parse_errors).padStart(5)}`);
   console.log(`  Avg latency:      ${openapi.summary.avg_latency_ms.toFixed(0).padStart(5)}ms       ${mapi.summary.avg_latency_ms.toFixed(0).padStart(5)}ms`);
+  console.log(`  Total test time:  ${formatTime(openApiTestTime).padStart(6)}        ${formatTime(mapiTestTime).padStart(6)}`);
+  console.log(`  Input tokens:     ${String(openapi.summary.total_input_tokens).padStart(5)}          ${String(mapi.summary.total_input_tokens).padStart(5)}`);
+  console.log(`  Output tokens:    ${String(openapi.summary.total_output_tokens).padStart(5)}          ${String(mapi.summary.total_output_tokens).padStart(5)}`);
   console.log('');
 
   const diff = mapi.summary.accuracy - openapi.summary.accuracy;

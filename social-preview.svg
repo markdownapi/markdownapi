@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D2D2D"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Logo Mark -->
+  <rect x="80" y="80" width="80" height="80" rx="16" fill="#C85D3E"/>
+  <text x="120" y="140" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="700" fill="white" text-anchor="middle">M</text>
+
+  <!-- Title -->
+  <text x="80" y="240" font-family="Georgia, serif" font-size="72" font-weight="600" fill="#FAF7F2">Markdown API</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#D4A03E">API specifications for the AI era</text>
+
+  <!-- Stats Box -->
+  <rect x="80" y="380" width="1040" height="170" rx="16" fill="#FAF7F2" opacity="0.08"/>
+
+  <!-- Stats -->
+  <text x="180" y="440" font-family="system-ui, sans-serif" font-size="24" fill="#888">Test Results</text>
+
+  <text x="180" y="500" font-family="monospace" font-size="48" font-weight="600" fill="#4A7C59">100%</text>
+  <text x="180" y="530" font-family="system-ui, sans-serif" font-size="18" fill="#888">MAPI Accuracy</text>
+
+  <text x="420" y="500" font-family="monospace" font-size="48" font-weight="600" fill="#2A7B7B">15x</text>
+  <text x="420" y="530" font-family="system-ui, sans-serif" font-size="18" fill="#888">Fewer Tokens</text>
+
+  <text x="620" y="500" font-family="monospace" font-size="48" font-weight="600" fill="#D4A03E">12x</text>
+  <text x="620" y="530" font-family="system-ui, sans-serif" font-size="18" fill="#888">Faster</text>
+
+  <text x="820" y="500" font-family="monospace" font-size="48" font-weight="600" fill="#C85D3E">145</text>
+  <text x="820" y="530" font-family="system-ui, sans-serif" font-size="18" fill="#888">Test Cases</text>
+
+  <!-- URL -->
+  <text x="1120" y="590" font-family="system-ui, sans-serif" font-size="24" fill="#888" text-anchor="end">markdownapi.org</text>
+</svg>

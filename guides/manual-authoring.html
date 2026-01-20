@@ -128,7 +128,7 @@
             <a href="../index.html" class="logo"><div class="logo-mark">M</div>MarkdownAPI</a>
             <nav class="main-nav">
                 <a href="../getting-started.html" class="active">Getting Started</a>
-                <a href="../index.html#why-llms">Why MAPI</a>
+                <a href="../findings.html">Findings</a>
                 <a href="../specs/mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
                 <a href="../specs/mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
             </nav>
@@ -140,6 +140,7 @@
     <div class="mobile-menu" id="mobileMenu">
         <a href="../index.html">Home</a>
         <a href="../getting-started.html">Getting Started</a>
+        <a href="../findings.html">Findings</a>
         <a href="../specs/mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
         <a href="../specs/mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
     </div>
@@ -380,7 +381,12 @@ The email must be unique; attempting to create a duplicate returns 409.
 
                 <div class="callout tip">
                     <div class="callout-title">Writing good Intentions</div>
-                    <p>Don't just describe what the endpoint does—explain <em>when</em> to use it and <em>why</em>. "Creates a user" is useless. "Create a new user account during customer onboarding. Email must be unique." tells the reader (human or LLM) what they need to know.</p>
+                    <p>Don't just describe what the endpoint does—explain <em>when</em> to use it and <em>why</em>. Good intentions also:</p>
+                    <ul style="margin: 0.75rem 0 0 1.25rem; font-size: 0.95rem;">
+                        <li><strong>Differentiate similar capabilities:</strong> "Use <code>search</code> to <em>find</em> a page; use this to <em>read</em> its content."</li>
+                        <li><strong>Mention multi-step workflows:</strong> "To delete by position, first use <code>blocks.children.list</code> to find the ID."</li>
+                        <li><strong>Specify identifier types:</strong> "Accepts a UUID. If you only have an email, use <code>users.list</code> first."</li>
+                    </ul>
                 </div>
 
                 <h2>Validate your work</h2>

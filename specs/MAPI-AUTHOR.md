@@ -61,18 +61,48 @@ interface DoSomethingResponse { ... }
 
 ## Writing Good Intentions
 
+The Intention section is critical for LLM routing. A well-written intention helps agents choose the correct capability on the first try.
+
 **Do:**
 - Explain what the capability accomplishes
 - State when an agent should choose this over alternatives
 - Mention prerequisites or context needed
+- Reference related capabilities by ID when disambiguation is needed
+- Specify what identifier types are accepted (UUID, email, name, etc.)
 
 **Don't:**
 - Repeat the schema
 - Just say "creates a resource"
 - Leave it generic
+- Assume the reader knows which capability to use first
 
-**Example:**
-> Send a conversation to Claude and receive a response. Use this when you want the complete response at once. For real-time streaming, use Stream Message instead.
+### Differentiating Similar Capabilities
+
+When capabilities could be confused, explicitly contrast them:
+
+> **Good:** "List all child blocks of a page to read its content. Use this when you have a page ID and want to see what's inside. Use `search` only to *find* a page by name; use this to *read* a page's content."
+
+> **Bad:** "List all child blocks of a page or block."
+
+### Multi-Step Workflows
+
+When a task typically requires multiple capabilities, mention the workflow:
+
+> **Good:** "Delete a block by ID. For positional deletion (e.g., 'delete the last paragraph'), first use `blocks.children.list` to find the target block's ID."
+
+> **Bad:** "Delete a block."
+
+### Identifier Requirements
+
+Be explicit about what identifiers the capability accepts:
+
+> **Good:** "Retrieve a user by their UUID. If you only have an email or name, use `users.list` to find the user's ID first."
+
+> **Bad:** "Retrieve details about a specific user."
+
+### Example
+
+> Send a conversation to Claude and receive a response. Use this when you want the complete response at once. For real-time streaming, use `messages.create_stream` instead. For counting tokens before sending, use `messages.count_tokens`.
 
 ## Schema Constraints vs Logic Constraints
 

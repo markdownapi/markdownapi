@@ -680,7 +680,7 @@ idempotent: true
 
 ### Intention
 
-List all child blocks of a page or block. This is how you read page content. For nested content (blocks with `has_children: true`), call this recursively.
+List all child blocks of a page or block to read its content. Use this when you have a page ID and want to see what's inside. Use `search` only to *find* a page by name; use this to *read* a page's content. For nested content (blocks with `has_children: true`), call this recursively.
 
 ### Input
 
@@ -754,7 +754,7 @@ idempotent: true
 
 ### Intention
 
-Retrieve a single block by ID. Use this when you need details about a specific block or to check if it has children before recursing.
+Retrieve a single block by its ID. Use this when you have a block ID and need its details or to check if it has children. If you need to find a block within a page, use `blocks.children.list` to enumerate blocks first.
 
 ### Input
 
@@ -837,7 +837,7 @@ idempotent: true
 
 ### Intention
 
-Delete a block (move to trash). This also deletes all children of the block. Equivalent to setting `archived: true` via update.
+Delete a block by ID (move to trash). This also deletes all children of the block. For positional deletion (e.g., "delete the last paragraph"), first use `blocks.children.list` to find the target block's ID. Equivalent to setting `archived: true` via update.
 
 ### Input
 
@@ -899,7 +899,7 @@ idempotent: true
 
 ### Intention
 
-Retrieve details about a specific user by ID. Use this when you have a user ID from a property value or audit log and need their name/email.
+Retrieve a user by their UUID. Use this when you already have a user ID from a property value or audit log. If you only have an email or name, use `users.list` to find the user's ID first.
 
 ### Input
 

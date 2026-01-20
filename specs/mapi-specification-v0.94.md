@@ -256,11 +256,14 @@ Each capability has the following structure:
 
 ### 4.2 The Intention Section
 
-The Intention section is critical for agent comprehension. It explains:
+The Intention section is critical for agent comprehension and correct capability routing. A well-written intention helps LLMs choose the correct capability on the first try.
+
+The Intention section explains:
 
 - What the capability does (in plain language)
-- When an agent should choose this capability
+- When an agent should choose this capability over alternatives
 - What prerequisites or context are needed
+- What identifier types are accepted (UUID, email, name, etc.)
 
 ```markdown
 ### Intention
@@ -271,6 +274,40 @@ processes the full conversation history, so include all relevant context
 in the messages array.
 
 This is the primary endpoint for all Claude interactions.
+```
+
+#### Differentiating Similar Capabilities
+
+When capabilities could be confused, explicitly contrast them in the Intention:
+
+```markdown
+### Intention
+
+List all child blocks of a page to read its content. Use this when you
+have a page ID and want to see what's inside. Use `search` only to *find*
+a page by name; use this to *read* a page's content.
+```
+
+#### Multi-Step Workflows
+
+When a task typically requires multiple capabilities, mention the workflow:
+
+```markdown
+### Intention
+
+Delete a block by ID. For positional deletion (e.g., "delete the last
+paragraph"), first use `blocks.children.list` to find the target block's ID.
+```
+
+#### Identifier Requirements
+
+Be explicit about what identifiers the capability accepts:
+
+```markdown
+### Intention
+
+Retrieve a user by their UUID. If you only have an email or name,
+use `users.list` to find the user's ID first.
 ```
 
 ### 4.3 Logic Constraints Section

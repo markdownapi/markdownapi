@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preliminary Findings - Markdown API (MAPI)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://markdownapi.org/findings.html">
+    <meta property="og:title" content="MAPI vs OpenAPI: LLM Comprehension Test Results">
+    <meta property="og:description" content="Preliminary findings from A/B testing LLM comprehension of MAPI vs OpenAPI specifications across 4 production APIs and 145 test cases.">
+    <meta property="og:image" content="https://markdownapi.org/social-preview.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://markdownapi.org/findings.html">
+    <meta name="twitter:title" content="MAPI vs OpenAPI: LLM Comprehension Test Results">
+    <meta name="twitter:description" content="Preliminary findings from A/B testing LLM comprehension of MAPI vs OpenAPI specifications across 4 production APIs and 145 test cases.">
+    <meta name="twitter:image" content="https://markdownapi.org/social-preview.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #D4A03E;
+            --burnt-orange: #C85D3E;
+            --teal: #2A7B7B;
+            --olive: #5E7153;
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --charcoal: #2D2D2D;
+            --light-charcoal: #4A4A4A;
+            --sand: #E8E0D5;
+            --green: #4A7C59;
+            --red: #C85D5D;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+        .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { padding: 1.5rem 0; }
+        header .container-wide { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.25rem; font-weight: 600; color: var(--teal); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-mark { width: 32px; height: 32px; background: var(--burnt-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
+        .main-nav { display: flex; align-items: center; gap: 2rem; }
+        .main-nav a { text-decoration: none; color: var(--light-charcoal); font-size: 0.95rem; font-weight: 500; transition: color 0.2s ease; }
+        .main-nav a:hover, .main-nav a.active { color: var(--teal); }
+        .main-nav a.nav-cta { background: var(--teal); color: white; padding: 0.6rem 1.25rem; border-radius: 8px; }
+        .main-nav a.nav-cta:hover { background: #237070; color: white; }
+        .main-nav a.nav-cta-alt { background: var(--burnt-orange); }
+        .main-nav a.nav-cta-alt:hover { background: #A84D32; }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 200; }
+        .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--charcoal); margin: 5px 0; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--charcoal); z-index: 150; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: var(--cream); text-decoration: none; font-size: 1.5rem; font-weight: 600; padding: 1rem 2rem; min-height: 48px; display: flex; align-items: center; }
+        .mobile-menu a:hover { color: var(--mustard); }
+        .mobile-menu a.nav-cta { background: var(--teal); border-radius: 8px; font-size: 1.25rem; }
+        .mobile-menu a.nav-cta-alt { background: var(--burnt-orange); }
+
+        /* Page Header */
+        .page-header { padding: 3rem 0 2rem; border-bottom: 1px solid var(--sand); }
+        .page-header h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: 2.75rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem; }
+        .page-header .subtitle { font-size: 1.15rem; color: var(--light-charcoal); max-width: 700px; line-height: 1.7; }
+        .page-header .meta { font-size: 0.9rem; color: var(--light-charcoal); margin-top: 1rem; }
+        .page-header .meta time { font-weight: 500; }
+
+        /* Content */
+        .content { padding: 3rem 0 4rem; }
+        .content h2 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.75rem; font-weight: 600; color: var(--charcoal); margin: 3rem 0 1rem; padding-top: 1rem; border-top: 1px solid var(--sand); }
+        .content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+        .content h3 { font-size: 1.2rem; font-weight: 600; color: var(--charcoal); margin: 2rem 0 0.75rem; }
+        .content p { font-size: 1.05rem; color: var(--light-charcoal); margin-bottom: 1.25rem; }
+        .content ul, .content ol { margin: 0 0 1.5rem 1.5rem; color: var(--light-charcoal); }
+        .content li { font-size: 1.05rem; margin-bottom: 0.5rem; }
+        .content strong { color: var(--charcoal); font-weight: 600; }
+        .content code { background: var(--sand); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--burnt-orange); }
+
+        /* Key Findings Box */
+        .key-findings { background: linear-gradient(135deg, var(--teal) 0%, #1E5F5F 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0; color: white; }
+        .key-findings h3 { color: white; margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+        .key-findings ul { margin: 0; list-style: none; padding: 0; }
+        .key-findings li { font-size: 1.1rem; margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; color: rgba(255,255,255,0.95); }
+        .key-findings li::before { content: "→"; position: absolute; left: 0; color: var(--mustard); font-weight: 600; }
+
+        /* Tables */
+        .data-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.95rem; background: var(--warm-white); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .data-table th { background: var(--charcoal); color: white; font-weight: 600; text-align: left; padding: 1rem 1.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .data-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--sand); color: var(--light-charcoal); }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(42, 123, 123, 0.04); }
+        .data-table .num { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+        .data-table .winner { background: rgba(74, 124, 89, 0.1); font-weight: 600; color: var(--green); }
+        .data-table .na { color: var(--light-charcoal); opacity: 0.5; font-style: italic; }
+        .data-table .api-name { font-weight: 600; color: var(--charcoal); }
+
+        /* Comparison Cards */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        .comparison-card { background: var(--warm-white); border-radius: 12px; padding: 1.5rem; border: 2px solid var(--sand); }
+        .comparison-card.openapi { border-color: var(--burnt-orange); }
+        .comparison-card.mapi { border-color: var(--teal); }
+        .comparison-card h4 { font-size: 1rem; margin-bottom: 1rem; }
+        .comparison-card.openapi h4 { color: var(--burnt-orange); }
+        .comparison-card.mapi h4 { color: var(--teal); }
+        .stat { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--sand); }
+        .stat:last-child { border-bottom: none; }
+        .stat-label { color: var(--light-charcoal); font-size: 0.9rem; }
+        .stat-value { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--charcoal); }
+
+        /* Callout */
+        .callout { background: var(--warm-white); border-left: 4px solid var(--mustard); border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+        .callout.info { border-left-color: var(--teal); }
+        .callout.warning { border-left-color: var(--burnt-orange); }
+        .callout-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--charcoal); }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; }
+
+        /* Code Block */
+        .code-block { background: var(--charcoal); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+        .code-block pre { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.6; color: #E8E0D5; }
+        .code-block .comment { color: #6A9955; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+            .data-table { font-size: 0.85rem; }
+            .data-table th, .data-table td { padding: 0.75rem; }
+        }
+        @media (max-width: 600px) {
+            .mobile-menu-btn { display: block; }
+            .main-nav { display: none; }
+            .page-header h1 { font-size: 2rem; }
+            .key-findings { padding: 1.5rem; }
+            .key-findings li { font-size: 1rem; }
+        }
+
+        /* Footer */
+        .site-footer { background: var(--charcoal); color: var(--cream); text-align: center; padding: 2rem; margin-top: 3rem; }
+        .site-footer a { color: var(--mustard); text-decoration: none; }
+        .site-footer a:hover { text-decoration: underline; }
+        .footer-divider { color: rgba(255,255,255,0.3); margin: 0 1rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container-wide">
+            <a href="index.html" class="logo"><div class="logo-mark">M</div>MarkdownAPI</a>
+            <nav class="main-nav">
+                <a href="getting-started.html">Getting Started</a>
+                <a href="findings.html" class="active">Findings</a>
+                <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
+                <a href="specs/mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Home</a>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="findings.html">Findings</a>
+        <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
+        <a href="specs/mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
+    </div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Preliminary Findings</h1>
+                <p class="subtitle">A/B testing LLM comprehension of MAPI vs OpenAPI specifications across four production APIs.</p>
+                <p class="meta">Last updated: <time datetime="2026-01-20">January 20, 2026</time> · 145 test cases · Claude 3.5 Haiku</p>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container">
+
+                <div class="key-findings">
+                    <h3>Key Observations</h3>
+                    <ul>
+                        <li>MAPI achieved 100% accuracy on 2 of 4 APIs tested (Anthropic, Google Cloud)</li>
+                        <li>MAPI uses 3-15x fewer tokens than equivalent OpenAPI specs</li>
+                        <li>GitHub's 12MB OpenAPI spec exceeds LLM context limits; MAPI's 25KB spec works</li>
+                        <li>Accuracy differences between formats are small (0-6%); token efficiency differences are large</li>
+                    </ul>
+                </div>
+
+                <h2>Methodology</h2>
+
+                <p>We built a test harness to measure how accurately LLMs can route natural language requests to the correct API capability when given an API specification. The test compares two specification formats: OpenAPI (the industry standard) and MAPI (Markdown API).</p>
+
+                <h3>Test Design</h3>
+
+                <p>Each test case consists of:</p>
+                <ul>
+                    <li>A natural language request (e.g., "Send a message to Claude asking about the weather")</li>
+                    <li>An expected capability ID (e.g., <code>messages.create</code>)</li>
+                </ul>
+
+                <p>The LLM receives the full API specification and must identify which capability handles the request. We measure:</p>
+                <ul>
+                    <li><strong>Accuracy</strong> — percentage of correct capability selections</li>
+                    <li><strong>Latency</strong> — time per API call (reflects spec processing time)</li>
+                    <li><strong>Token usage</strong> — input tokens consumed per test</li>
+                </ul>
+
+                <h3>Evaluation Approach</h3>
+
+                <p>Initial testing used exact string matching, which unfairly penalized OpenAPI (which returns paths like <code>/v1/messages</code> vs MAPI's <code>messages.create</code>). We implemented semantic evaluation using an LLM judge to determine if two capability identifiers refer to the same functionality, regardless of naming convention.</p>
+
+                <div class="callout info">
+                    <div class="callout-title">Semantic Evaluation</div>
+                    <p>The judge determines if <code>/v1/messages</code> (OpenAPI) and <code>messages.create</code> (MAPI) are functionally equivalent for a given request, enabling fair comparison across formats.</p>
+                </div>
+
+                <h3>Test Infrastructure</h3>
+
+                <ul>
+                    <li><strong>Model:</strong> Claude 3.5 Haiku (claude-3-5-haiku-20241022)</li>
+                    <li><strong>Test harness:</strong> TypeScript/Node.js CLI</li>
+                    <li><strong>Execution:</strong> Sequential, one test at a time</li>
+                    <li><strong>No retries:</strong> Each test gets one attempt; errors are recorded as failures</li>
+                </ul>
+
+                <h2>APIs Tested</h2>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>API</th>
+                            <th>Test Cases</th>
+                            <th>OpenAPI Size</th>
+                            <th>MAPI Size</th>
+                            <th>Size Ratio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="api-name">Anthropic Messages</td>
+                            <td class="num">15</td>
+                            <td class="num">8 KB</td>
+                            <td class="num">7 KB</td>
+                            <td class="num">1.1x</td>
+                        </tr>
+                        <tr>
+                            <td class="api-name">Google Cloud Billing</td>
+                            <td class="num">38</td>
+                            <td class="num">30 KB</td>
+                            <td class="num">24 KB</td>
+                            <td class="num">1.3x</td>
+                        </tr>
+                        <tr>
+                            <td class="api-name">Notion</td>
+                            <td class="num">47</td>
+                            <td class="num">433 KB</td>
+                            <td class="num">24 KB</td>
+                            <td class="num">18x</td>
+                        </tr>
+                        <tr>
+                            <td class="api-name">GitHub REST</td>
+                            <td class="num">45</td>
+                            <td class="num">12 MB</td>
+                            <td class="num">25 KB</td>
+                            <td class="num">480x</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Results by API</h2>
+
+                <h3>Anthropic Messages API</h3>
+                <p>A small, focused API with 3 capabilities (create message, stream message, count tokens).</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>OpenAPI</th>
+                            <th>MAPI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td class="num winner">100.0%</td>
+                            <td class="num winner">100.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Correct / Total</td>
+                            <td class="num">15 / 15</td>
+                            <td class="num">15 / 15</td>
+                        </tr>
+                        <tr>
+                            <td>Total Test Time</td>
+                            <td class="num">15.0s</td>
+                            <td class="num">16.2s</td>
+                        </tr>
+                        <tr>
+                            <td>Input Tokens</td>
+                            <td class="num">31,947</td>
+                            <td class="num">34,032</td>
+                        </tr>
+                        <tr>
+                            <td>Avg Latency</td>
+                            <td class="num">1,000ms</td>
+                            <td class="num">1,080ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Observation:</strong> Both formats achieved perfect accuracy on this small API. Token usage was comparable.</p>
+
+                <h3>Google Cloud Billing API</h3>
+                <p>A medium-complexity API covering billing accounts, budgets, and IAM operations.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>OpenAPI</th>
+                            <th>MAPI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td class="num">97.4%</td>
+                            <td class="num winner">100.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Correct / Total</td>
+                            <td class="num">37 / 38</td>
+                            <td class="num">38 / 38</td>
+                        </tr>
+                        <tr>
+                            <td>Total Test Time</td>
+                            <td class="num">2m 5s</td>
+                            <td class="num winner">55.5s</td>
+                        </tr>
+                        <tr>
+                            <td>Input Tokens</td>
+                            <td class="num">606,556</td>
+                            <td class="num winner">179,702</td>
+                        </tr>
+                        <tr>
+                            <td>Avg Latency</td>
+                            <td class="num">3,279ms</td>
+                            <td class="num winner">1,460ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Observation:</strong> MAPI achieved perfect accuracy while using 3.4x fewer tokens and completing 2.3x faster. OpenAPI confused <code>testIamPermissions</code> with <code>setIamPolicy</code> on one test.</p>
+
+                <h3>Notion API</h3>
+                <p>A complex API with pages, databases, blocks, users, and comments.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>OpenAPI</th>
+                            <th>MAPI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td class="num winner">91.5%</td>
+                            <td class="num">89.4%</td>
+                        </tr>
+                        <tr>
+                            <td>Correct / Total</td>
+                            <td class="num">43 / 47</td>
+                            <td class="num">42 / 47</td>
+                        </tr>
+                        <tr>
+                            <td>Total Test Time</td>
+                            <td class="num">20m 13s</td>
+                            <td class="num winner">1m 39s</td>
+                        </tr>
+                        <tr>
+                            <td>Input Tokens</td>
+                            <td class="num">5,181,882</td>
+                            <td class="num winner">339,942</td>
+                        </tr>
+                        <tr>
+                            <td>Avg Latency</td>
+                            <td class="num">25,810ms</td>
+                            <td class="num winner">2,097ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Observation:</strong> OpenAPI had slightly higher accuracy (+2.1%) but used 15x more tokens and took 12x longer. Both formats struggled with distinguishing similar capabilities (e.g., <code>search</code> vs <code>blocks.children.list</code>).</p>
+
+                <h3>GitHub REST API</h3>
+                <p>A large API covering repositories, issues, pull requests, actions, and webhooks.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>OpenAPI</th>
+                            <th>MAPI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td class="na">N/A</td>
+                            <td class="num winner">97.8%</td>
+                        </tr>
+                        <tr>
+                            <td>Correct / Total</td>
+                            <td class="na">Context exceeded</td>
+                            <td class="num">44 / 45</td>
+                        </tr>
+                        <tr>
+                            <td>Total Test Time</td>
+                            <td class="na">—</td>
+                            <td class="num">1m 25s</td>
+                        </tr>
+                        <tr>
+                            <td>Input Tokens</td>
+                            <td class="na">~4.8M per test</td>
+                            <td class="num">344,022</td>
+                        </tr>
+                        <tr>
+                            <td>Avg Latency</td>
+                            <td class="na">—</td>
+                            <td class="num">1,899ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Observation:</strong> GitHub's 12MB OpenAPI spec exceeds Claude's context window, making it unusable for LLM-based routing. MAPI's 25KB spec achieved 97.8% accuracy with no issues.</p>
+
+                <h2>Summary</h2>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>API</th>
+                            <th>Tests</th>
+                            <th>OpenAPI Accuracy</th>
+                            <th>MAPI Accuracy</th>
+                            <th>Token Savings</th>
+                            <th>Speed Improvement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="api-name">Anthropic</td>
+                            <td class="num">15</td>
+                            <td class="num">100.0%</td>
+                            <td class="num">100.0%</td>
+                            <td class="num">-6%</td>
+                            <td class="num">-7%</td>
+                        </tr>
+                        <tr>
+                            <td class="api-name">Google Cloud</td>
+                            <td class="num">38</td>
+                            <td class="num">97.4%</td>
+                            <td class="num winner">100.0%</td>
+                            <td class="num winner">3.4x</td>
+                            <td class="num winner">2.3x</td>
+                        </tr>
+                        <tr>
+                            <td class="api-name">Notion</td>
+                            <td class="num">47</td>
+                            <td class="num winner">91.5%</td>
+                            <td class="num">89.4%</td>
+                            <td class="num winner">15x</td>
+                            <td class="num winner">12x</td>
+                        </tr>
+                        <tr>
+                            <td class="api-name">GitHub</td>
+                            <td class="num">45</td>
+                            <td class="na">Unusable</td>
+                            <td class="num winner">97.8%</td>
+                            <td class="num winner">∞</td>
+                            <td class="num winner">∞</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Challenges Encountered</h2>
+
+                <h3>1. Fair Evaluation Across Formats</h3>
+                <p>OpenAPI and MAPI use different naming conventions. OpenAPI returns paths (<code>/v1/messages</code>) while MAPI returns capability IDs (<code>messages.create</code>). Initial exact-match evaluation showed 0% accuracy for OpenAPI on Anthropic—not because it was wrong, but because the names differed. Implementing semantic evaluation resolved this.</p>
+
+                <h3>2. Spec Quality Matters</h3>
+                <p>The original Anthropic OpenAPI spec only covered the legacy <code>/v1/complete</code> endpoint, not the current Messages API. We created an updated OpenAPI spec to enable fair comparison. Spec quality and completeness significantly impact results.</p>
+
+                <h3>3. Ambiguous Test Cases</h3>
+                <p>Some failures reflect genuinely ambiguous requests. "Delete the last paragraph from the page" could reasonably be interpreted as needing <code>blocks.children.list</code> first (to find the block) before <code>blocks.delete</code>. The "correct" answer depends on interpretation.</p>
+
+                <h3>4. LLM Variance</h3>
+                <p>Results vary between runs due to LLM non-determinism. A test that passes in one run may fail in another. Single-run comparisons should be interpreted with this in mind.</p>
+
+                <h2>Limitations</h2>
+
+                <ul>
+                    <li><strong>Single model tested:</strong> Results are specific to Claude 3.5 Haiku; other models may perform differently</li>
+                    <li><strong>Single run per configuration:</strong> No statistical significance testing; results include natural variance</li>
+                    <li><strong>Task-specific:</strong> Tests measure capability routing only, not code generation or parameter extraction</li>
+                    <li><strong>Hand-written MAPI specs:</strong> MAPI specs were written for this test; production specs may vary in quality</li>
+                    <li><strong>Limited API coverage:</strong> Four APIs may not represent the full diversity of real-world APIs</li>
+                </ul>
+
+                <h2>Reproducing These Results</h2>
+
+                <p>The test harness and all specifications are available in the MAPI repository:</p>
+
+                <div class="code-block">
+                    <pre><span class="comment"># Clone the repository</span>
+git clone https://github.com/markdownapi/markdownapi.git
+cd markdownapi/tests/harness
+
+<span class="comment"># Install dependencies</span>
+npm install
+
+<span class="comment"># Set your API key</span>
+echo "ANTHROPIC_API_KEY=your-key" > ../../.env.local
+
+<span class="comment"># Run a comparison</span>
+npm run dev -- compare -m haiku -a google-cloud</pre>
+                </div>
+
+                <div class="callout warning">
+                    <div class="callout-title">Cost Warning</div>
+                    <p>Running the full test suite consumes significant API tokens. The Notion comparison alone uses ~5.5M tokens for OpenAPI. Budget accordingly.</p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 MAPI Project <span class="footer-divider">|</span> <a href="authors.html">The Authors</a></p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

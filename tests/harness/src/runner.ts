@@ -7,6 +7,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { parse as parseYaml } from 'yaml';
 import {
   TestCase,
@@ -19,14 +20,16 @@ import {
 import { callClaude } from './llm/anthropic.js';
 import { evaluate, summarize } from './evaluator.js';
 
-const POPULAR_APIS_DIR = path.resolve(import.meta.dirname, '../../popularAPIs');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const POPULAR_APIS_DIR = path.resolve(__dirname, '../../popularAPIs');
 
 /**
  * Map API names to their spec file names
  */
 const SPEC_FILES: Record<ApiName, { openapi: string; mapi: string }> = {
   'anthropic': {
-    openapi: 'openapi.yaml',
+    openapi: 'openapi-messages.yaml',
     mapi: 'anthropic.mapi.md',
   },
   'github': {
@@ -104,7 +107,7 @@ async function runTestCase(
 
   try {
     const llmResponse = await callClaude(config.model, systemPrompt, userPrompt);
-    return evaluate(testCase, llmResponse);
+    return await evaluate(testCase, llmResponse);
   } catch (error) {
     // API error - record as a failure, don't retry
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -126,9 +129,13 @@ async function runTestCase(
 /**
  * Run all test cases for a given configuration
  */
-export async function runTests(config: TestRunConfig): Promise<TestRunResult> {
-  const testCases = loadTestCases(config.api);
+export async function runTests(config: TestRunConfig, limit?: number): Promise<TestRunResult> {
+  let testCases = loadTestCases(config.api);
   const spec = loadSpec(config.api, config.spec_format);
+
+  if (limit && limit < testCases.length) {
+    testCases = testCases.slice(0, limit);
+  }
 
   console.log(`\nRunning ${testCases.length} tests...`);
   console.log(`  Model: ${config.model}`);

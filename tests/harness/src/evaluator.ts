@@ -1,21 +1,20 @@
 /**
- * Evaluator - compares LLM output against expected capability
+ * Evaluator - uses LLM to semantically compare responses
  *
- * IMPORTANT: This evaluator does NOT fix mistakes.
- * - If the JSON doesn't parse, that's a parse_error.
- * - If the capability doesn't match, that's incorrect.
- * - We record exactly what happened, warts and all.
+ * IMPORTANT: This evaluator uses semantic comparison, not string matching.
+ * - OpenAPI paths like "/v1/messages" and MAPI capabilities like "messages.create"
+ *   can both be correct if they refer to the same API functionality.
+ * - A fast LLM (Haiku) judges whether the response is semantically correct.
  */
 
 import { TestCase, TestResult, LLMResponse } from './types.js';
+import { callClaude } from './llm/anthropic.js';
 
 /**
- * Attempt to extract a capability from the LLM's raw output.
+ * Attempt to extract a capability/endpoint from the LLM's raw output.
  *
- * We try to be somewhat flexible in parsing (JSON, plain text, etc.)
- * but we do NOT retry or ask for clarification.
- *
- * Returns the extracted capability or null if we can't parse it.
+ * We try to be flexible in parsing (JSON, plain text, paths, etc.)
+ * Returns the extracted value or null if we can't parse it.
  */
 function extractCapability(rawOutput: string): { capability: string | null; error: string | null } {
   const trimmed = rawOutput.trim();
@@ -41,14 +40,20 @@ function extractCapability(rawOutput: string): { capability: string | null; erro
   }
 
   // Try 2: Look for a capability pattern in the text (e.g., "capability: foo.bar")
-  const capMatch = trimmed.match(/capability["\s:]+([a-zA-Z_][a-zA-Z0-9_.]*)/i);
+  const capMatch = trimmed.match(/capability["\s:]+([a-zA-Z0-9_./\-]+)/i);
   if (capMatch) {
     return { capability: capMatch[1], error: null };
   }
 
-  // Try 3: If the entire response looks like a capability ID (single dotted identifier)
-  if (/^[a-zA-Z_][a-zA-Z0-9_.]*$/.test(trimmed) && trimmed.length < 100) {
+  // Try 3: If the entire response looks like a capability ID or path (single identifier)
+  if (/^[a-zA-Z0-9_./\-]+$/.test(trimmed) && trimmed.length < 100) {
     return { capability: trimmed, error: null };
+  }
+
+  // Try 4: Extract any path-like string (for OpenAPI responses)
+  const pathMatch = trimmed.match(/\/[a-zA-Z0-9_./\-{}]+/);
+  if (pathMatch) {
+    return { capability: pathMatch[0], error: null };
   }
 
   // Failed to extract
@@ -59,21 +64,69 @@ function extractCapability(rawOutput: string): { capability: string | null; erro
 }
 
 /**
- * Evaluate a single test case against the LLM response.
+ * Use an LLM to judge if two capability identifiers refer to the same API functionality.
+ *
+ * This allows fair comparison between different naming conventions:
+ * - OpenAPI: "/v1/messages", "POST /messages"
+ * - MAPI: "messages.create", "messages.create_stream"
+ */
+async function judgeWithLLM(
+  prose: string,
+  expected: string,
+  actual: string
+): Promise<boolean> {
+  const systemPrompt = `You are an API evaluation judge. Your task is to determine if two API capability identifiers refer to the same functionality.
+
+The identifiers may use different naming conventions:
+- OpenAPI style: "/v1/messages", "POST /v1/complete", "/messages/{id}"
+- MAPI style: "messages.create", "messages.create_stream", "users.get"
+
+Consider them equivalent if they would handle the same user request, even if the names differ.
+
+Respond with ONLY "yes" or "no". No explanation.`;
+
+  const userPrompt = `User request: "${prose}"
+
+Expected capability: ${expected}
+Actual response: ${actual}
+
+Do these refer to the same API functionality that would handle this user request?`;
+
+  try {
+    const response = await callClaude('haiku', systemPrompt, userPrompt);
+    const answer = response.content.trim().toLowerCase();
+    return answer === 'yes' || answer.startsWith('yes');
+  } catch {
+    // If LLM call fails, fall back to string comparison
+    return expected.toLowerCase() === actual.toLowerCase();
+  }
+}
+
+/**
+ * Evaluate a single test case against the LLM response using semantic comparison.
  *
  * Returns a TestResult with all details, including failures.
  */
-export function evaluate(
+export async function evaluate(
   testCase: TestCase,
   llmResponse: LLMResponse
-): TestResult {
+): Promise<TestResult> {
   const { capability, error } = extractCapability(llmResponse.content);
 
-  // Normalize for comparison (case-insensitive, trim whitespace)
-  const normalizedExpected = testCase.expected_capability.toLowerCase().trim();
-  const normalizedSelected = capability?.toLowerCase().trim() ?? null;
+  let correct = false;
 
-  const correct = normalizedSelected !== null && normalizedSelected === normalizedExpected;
+  if (capability !== null && error === null) {
+    // First try exact match (case-insensitive)
+    const normalizedExpected = testCase.expected_capability.toLowerCase().trim();
+    const normalizedSelected = capability.toLowerCase().trim();
+
+    if (normalizedSelected === normalizedExpected) {
+      correct = true;
+    } else {
+      // Use LLM to judge semantic equivalence
+      correct = await judgeWithLLM(testCase.prose, testCase.expected_capability, capability);
+    }
+  }
 
   return {
     test_id: testCase.id,

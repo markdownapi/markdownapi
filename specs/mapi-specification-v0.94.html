@@ -618,7 +618,7 @@
             </a>
             <nav class="main-nav">
                 <a href="../getting-started.html">Getting Started</a>
-                <a href="../index.html#why-llms">Why MAPI</a>
+                <a href="../findings.html">Findings</a>
                 <a href="#" class="nav-cta">Human Spec</a>
                 <a href="mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
             </nav>
@@ -630,6 +630,7 @@
     <div class="mobile-menu" id="mobileMenu">
         <a href="../index.html">Home</a>
         <a href="../getting-started.html">Getting Started</a>
+        <a href="../findings.html">Findings</a>
         <a href="mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
         <a href="mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
     </div>
@@ -1075,11 +1076,14 @@ Response content type: <span class="string">application/octet-stream</span> (or 
             </table>
 
             <h3><span class="subsection-num">4.2</span> The Intention Section</h3>
-            <p>The Intention section is critical for agent comprehension. It explains:</p>
+            <p>The Intention section is critical for agent comprehension and correct capability routing. A well-written intention helps LLMs choose the correct capability on the first try.</p>
+
+            <p>The Intention section explains:</p>
             <ul>
                 <li>What the capability does (in plain language)</li>
-                <li>When an agent should choose this capability</li>
+                <li>When an agent should choose this capability over alternatives</li>
                 <li>What prerequisites or context are needed</li>
+                <li>What identifier types are accepted (UUID, email, name, etc.)</li>
             </ul>
 
             <div class="code-block">
@@ -1091,6 +1095,34 @@ processes the full conversation history, so include all relevant context
 in the messages array.
 
 This is the primary endpoint for all Claude interactions.</pre>
+            </div>
+
+            <h4>Differentiating Similar Capabilities</h4>
+            <p>When capabilities could be confused, explicitly contrast them in the Intention:</p>
+            <div class="code-block">
+<pre><span class="meta">### Intention</span>
+
+List all child blocks of a page to read its content. Use this when you
+have a page ID and want to see what's inside. Use <span class="property">search</span> only to <em>find</em>
+a page by name; use this to <em>read</em> a page's content.</pre>
+            </div>
+
+            <h4>Multi-Step Workflows</h4>
+            <p>When a task typically requires multiple capabilities, mention the workflow:</p>
+            <div class="code-block">
+<pre><span class="meta">### Intention</span>
+
+Delete a block by ID. For positional deletion (e.g., "delete the last
+paragraph"), first use <span class="property">blocks.children.list</span> to find the target block's ID.</pre>
+            </div>
+
+            <h4>Identifier Requirements</h4>
+            <p>Be explicit about what identifiers the capability accepts:</p>
+            <div class="code-block">
+<pre><span class="meta">### Intention</span>
+
+Retrieve a user by their UUID. If you only have an email or name,
+use <span class="property">users.list</span> to find the user's ID first.</pre>
             </div>
 
             <h3><span class="subsection-num">4.3</span> Logic Constraints Section</h3>
