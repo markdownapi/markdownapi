@@ -1,0 +1,37 @@
+{
+  "name": "mapi-converter",
+  "version": "0.1.0",
+  "description": "Convert API specifications to MAPI Skill format",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mapi",
+    "openapi",
+    "api",
+    "converter",
+    "markdown"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "yaml": "^2.8.2"
+  }
+}

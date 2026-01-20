@@ -630,6 +630,10 @@ cards:
 ~~~
 ```
 
+### 13.3 Modular Authoring
+
+For large APIs where token efficiency is critical, MAPI specifications can be authored as a modular skill structure with an index file, shared definitions, and individual capability files. This enables agents to load only the capabilities they need. See the [MAPI Skill Authoring Guide](MAPI-SKILL.md) for the modular format specification.
+
 ---
 
 ## 14. Complete Examples
