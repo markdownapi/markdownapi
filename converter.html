@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAPI Converter - Convert OpenAPI to MAPI Skills</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #D4A03E;
+            --burnt-orange: #C85D3E;
+            --teal: #2A7B7B;
+            --olive: #5E7153;
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --charcoal: #2D2D2D;
+            --light-charcoal: #4A4A4A;
+            --sand: #E8E0D5;
+            --purple: #7B6BA7;
+            --blue: #5D8AA8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--cream); color: var(--charcoal); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { padding: 1.5rem 0; }
+        header .container { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.25rem; font-weight: 600; color: var(--teal); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-mark { width: 32px; height: 32px; background: var(--burnt-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
+        .main-nav { display: flex; align-items: center; gap: 2rem; }
+        .main-nav a { text-decoration: none; color: var(--light-charcoal); font-size: 0.95rem; font-weight: 500; transition: color 0.2s ease; }
+        .main-nav a:hover, .main-nav a.active { color: var(--teal); }
+        .main-nav a.nav-cta { background: var(--teal); color: white; padding: 0.6rem 1.25rem; border-radius: 8px; }
+        .main-nav a.nav-cta:hover { background: #237070; color: white; }
+        .main-nav a.nav-cta-alt { background: var(--burnt-orange); }
+        .main-nav a.nav-cta-alt:hover { background: #A84D32; }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 200; }
+        .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--charcoal); margin: 5px 0; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--charcoal); z-index: 150; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: var(--cream); text-decoration: none; font-size: 1.5rem; font-weight: 600; padding: 1rem 2rem; min-height: 48px; display: flex; align-items: center; }
+        .mobile-menu a:hover { color: var(--mustard); }
+        .mobile-menu a.nav-cta { background: var(--teal); border-radius: 8px; font-size: 1.25rem; }
+        .mobile-menu a.nav-cta-alt { background: var(--burnt-orange); }
+
+        /* Page Header */
+        .page-header { padding: 4rem 0 2rem; text-align: center; }
+        .page-header h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: 3rem; font-weight: 600; color: var(--charcoal); margin-bottom: 1rem; }
+        .page-header .subtitle { font-size: 1.25rem; color: var(--light-charcoal); max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+        /* Content */
+        .content { padding: 2rem 0 4rem; }
+        .content-grid { display: grid; grid-template-columns: 220px 1fr; gap: 3rem; }
+        .sidebar { position: sticky; top: 2rem; height: fit-content; }
+        .sidebar h3 { font-size: 0.9rem; font-weight: 600; color: var(--teal); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 0.5rem; }
+        .sidebar a { text-decoration: none; color: var(--light-charcoal); font-size: 0.95rem; display: block; padding: 0.4rem 0; transition: color 0.2s ease; }
+        .sidebar a:hover, .sidebar a.active { color: var(--teal); }
+
+        .main-content h2 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.75rem; font-weight: 600; margin: 2.5rem 0 1rem; padding-top: 1rem; border-top: 1px solid var(--sand); }
+        .main-content h2:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+        .main-content h3 { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .main-content p { margin-bottom: 1rem; color: var(--light-charcoal); }
+        .main-content ul, .main-content ol { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--light-charcoal); }
+        .main-content li { margin-bottom: 0.5rem; }
+
+        /* Code blocks */
+        pre { background: var(--charcoal); color: #e0e0e0; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0; font-size: 0.9rem; line-height: 1.5; }
+        code { font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; }
+        p code { background: var(--sand); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+
+        /* Callout boxes */
+        .callout { padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+        .callout-teal { background: rgba(42, 123, 123, 0.1); border-left: 4px solid var(--teal); }
+        .callout-orange { background: rgba(200, 93, 62, 0.1); border-left: 4px solid var(--burnt-orange); }
+        .callout-purple { background: rgba(123, 107, 167, 0.1); border-left: 4px solid var(--purple); }
+        .callout h4 { font-weight: 600; margin-bottom: 0.5rem; }
+
+        /* Command table */
+        .command-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .command-table th, .command-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--sand); }
+        .command-table th { background: var(--charcoal); color: var(--cream); font-weight: 600; }
+        .command-table tr:hover { background: var(--warm-white); }
+        .command-table code { background: var(--sand); padding: 0.2rem 0.4rem; border-radius: 4px; }
+
+        /* Feature cards */
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
+        .feature-card { background: var(--warm-white); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--sand); }
+        .feature-card h4 { font-weight: 600; margin-bottom: 0.5rem; color: var(--teal); }
+        .feature-card p { margin: 0; font-size: 0.95rem; }
+
+        /* Footer */
+        footer { background: var(--charcoal); color: var(--cream); padding: 3rem 0; margin-top: 4rem; }
+        footer .container { display: flex; justify-content: space-between; align-items: center; }
+        footer p { font-size: 0.9rem; opacity: 0.8; }
+        footer a { color: var(--mustard); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .sidebar { position: static; margin-bottom: 2rem; }
+            .main-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-mark">M</span>
+                Markdown API
+            </a>
+            <nav class="main-nav">
+                <a href="getting-started.html">Get Started</a>
+                <a href="skills.html">Skills</a>
+                <a href="converter.html" class="active">Converter</a>
+                <a href="findings.html">Findings</a>
+                <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu">
+        <a href="getting-started.html">Get Started</a>
+        <a href="skills.html">Skills</a>
+        <a href="converter.html">Converter</a>
+        <a href="findings.html">Findings</a>
+        <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
+    </div>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>MAPI Converter</h1>
+            <p class="subtitle">Convert OpenAPI specifications to MAPI Skill format. Use the CLI for batch conversions or the programmatic library for integration.</p>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <div class="content-grid">
+                <aside class="sidebar">
+                    <h3>On This Page</h3>
+                    <ul>
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#cli">CLI Usage</a></li>
+                        <li><a href="#commands">Commands</a></li>
+                        <li><a href="#options">Options</a></li>
+                        <li><a href="#library">Library Usage</a></li>
+                        <li><a href="#intents">Intent Generation</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                    </ul>
+                </aside>
+
+                <main class="main-content">
+                    <h2 id="overview">Overview</h2>
+                    <p>The MAPI Converter transforms API specifications into the modular Skill format for progressive loading. It supports two input formats:</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>OpenAPI to Skill</h4>
+                            <p>Convert OpenAPI 3.x YAML or JSON specifications directly to modular Skill folders.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>MAPI to Skill</h4>
+                            <p>Split single-file MAPI documents into the modular Skill structure for progressive loading.</p>
+                        </div>
+                    </div>
+
+                    <p>The converter can be used two ways:</p>
+                    <ul>
+                        <li><strong>CLI</strong> - Command-line tool for batch conversions and scripting</li>
+                        <li><strong>Library</strong> - Programmatic API for integration into tools and agents</li>
+                    </ul>
+
+                    <h2 id="installation">Installation</h2>
+                    <p>Install the MAPI CLI globally using npm:</p>
+
+<pre>npm install -g mapi-cli</pre>
+
+                    <p>Or use it locally in your project:</p>
+
+<pre>npm install mapi-converter</pre>
+
+                    <div class="callout callout-teal">
+                        <h4>Requirements</h4>
+                        <p>Node.js 18+ is required. For LLM-enhanced intent generation, set the <code>ANTHROPIC_API_KEY</code> environment variable.</p>
+                    </div>
+
+                    <h2 id="cli">CLI Usage</h2>
+                    <p>The CLI provides several commands for converting specifications:</p>
+
+<pre># Convert OpenAPI to Skill format
+mapi convert openapi.yaml -o ./my-skill/
+
+# Split single-file MAPI to Skill format
+mapi split api.mapi.md -o ./my-skill/
+
+# Auto-detect format and convert
+mapi auto spec-file.yaml -o ./my-skill/</pre>
+
+                    <h2 id="commands">Commands</h2>
+
+                    <table class="command-table">
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>mapi convert &lt;input&gt;</code></td>
+                            <td>Convert an OpenAPI specification to Skill folder structure</td>
+                        </tr>
+                        <tr>
+                            <td><code>mapi split &lt;input&gt;</code></td>
+                            <td>Convert a single-file MAPI document to Skill folder structure</td>
+                        </tr>
+                        <tr>
+                            <td><code>mapi auto &lt;input&gt;</code></td>
+                            <td>Auto-detect input format and convert to Skill folder structure</td>
+                        </tr>
+                        <tr>
+                            <td><code>mapi bundle &lt;input&gt;</code></td>
+                            <td>Convert Skill folder to single-file MAPI (future)</td>
+                        </tr>
+                    </table>
+
+                    <h2 id="options">Options</h2>
+
+                    <table class="command-table">
+                        <tr>
+                            <th>Option</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                        <tr>
+                            <td><code>-o, --output &lt;dir&gt;</code></td>
+                            <td>Output directory for the Skill folder</td>
+                            <td><code>./skill-output</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>-n, --name &lt;name&gt;</code></td>
+                            <td>Override the API name in generated files</td>
+                            <td>Extracted from spec</td>
+                        </tr>
+                        <tr>
+                            <td><code>-g, --generate-intents</code></td>
+                            <td>Use LLM to generate enhanced intent keywords</td>
+                            <td>Disabled</td>
+                        </tr>
+                    </table>
+
+                    <h2 id="library">Library Usage</h2>
+                    <p>Use the converter programmatically in your Node.js applications:</p>
+
+<pre>import {
+  convertOpenApiToSkill,
+  convertMapiToSkill,
+  convertToSkill,
+  detectFormat
+} from 'mapi-converter';
+
+// Convert OpenAPI to Skill
+const openapiContent = fs.readFileSync('openapi.yaml', 'utf-8');
+const result = await convertOpenApiToSkill(openapiContent);
+
+// Result contains:
+// - skillMd: string (Skill.md content)
+// - common: Record&lt;string, string&gt; (common files)
+// - capabilities: Record&lt;string, string&gt; (capability files)
+
+// Auto-detect and convert
+const content = fs.readFileSync('some-spec.yaml', 'utf-8');
+const format = detectFormat(content); // 'openapi' | 'mapi'
+const skillOutput = await convertToSkill(content);</pre>
+
+                    <h3>SkillOutput Interface</h3>
+
+<pre>interface SkillOutput {
+  skillMd: string;                    // Skill.md index content
+  common: Record&lt;string, string&gt;;     // common/*.md files
+  capabilities: Record&lt;string, string&gt;; // capabilities/*.md files
+}</pre>
+
+                    <h2 id="intents">Intent Generation</h2>
+                    <p>Intent keywords help agents match user requests to API capabilities. The converter supports two modes:</p>
+
+                    <h3>Simple Intent Extraction (Default)</h3>
+                    <p>Extracts keywords from capability IDs and descriptions using pattern matching. Fast but basic.</p>
+
+<pre>mapi convert openapi.yaml -o ./my-skill/</pre>
+
+                    <h3>LLM-Enhanced Intent Generation</h3>
+                    <p>Uses Claude to generate semantic intent keywords for better matching accuracy. Requires <code>ANTHROPIC_API_KEY</code>.</p>
+
+<pre># Set your API key
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# Enable LLM intent generation
+mapi convert openapi.yaml -o ./my-skill/ --generate-intents</pre>
+
+                    <div class="callout callout-purple">
+                        <h4>LLM Intent Keywords</h4>
+                        <p>LLM-generated intents include synonyms, task descriptions, and common variations. For example, a "create user" capability might generate: <em>create user, add user, register account, new user, sign up, add member, onboard user</em>.</p>
+                    </div>
+
+                    <h2 id="examples">Examples</h2>
+
+                    <h3>Converting the Notion API</h3>
+
+<pre># Download Notion OpenAPI spec
+curl -o notion-openapi.yaml https://...
+
+# Convert to Skill format with LLM intents
+mapi convert notion-openapi.yaml \
+  -o ./notion-skill/ \
+  --name "Notion" \
+  --generate-intents
+
+# Output structure:
+# notion-skill/
+# ├── Skill.md
+# ├── common/
+# │   └── auth.md
+# └── capabilities/
+#     ├── pages.create.md
+#     ├── pages.get.md
+#     ├── databases.query.md
+#     └── ...</pre>
+
+                    <h3>Converting a Single-File MAPI</h3>
+
+<pre># Split existing MAPI into Skill structure
+mapi split github.mapi.md -o ./github-skill/
+
+# Summary output:
+#   Created: Skill.md
+#   Created: common/auth.md
+#   Created: common/schemas/types.md
+#   Created: capabilities/repos.create.md
+#   ...
+#
+# Summary:
+#   - 1 Skill.md index file
+#   - 2 common files
+#   - 47 capability files</pre>
+
+                    <h3>Programmatic Conversion with Custom Intents</h3>
+
+<pre>import { convertOpenApiToSkill } from 'mapi-converter';
+
+// Custom intent generator
+const customIntentGenerator = {
+  async generate(capabilityId: string, description: string) {
+    // Your custom logic here
+    return ['intent1', 'intent2', 'intent3'];
+  }
+};
+
+const result = await convertOpenApiToSkill(content, {
+  apiName: 'My API',
+  intentGenerator: customIntentGenerator
+});</pre>
+
+                    <div class="callout callout-orange">
+                        <h4>Source Code</h4>
+                        <p>The converter source code is available in the <a href="https://github.com/jeffrschneider/markdownapi/tree/main/lib/mapi-converter" style="color: var(--burnt-orange);">lib/mapi-converter</a> directory.</p>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Markdown API Project. <a href="https://github.com/jeffrschneider/markdownapi">GitHub</a></p>
+            <p>Built for the AI era.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.querySelector('.mobile-menu-btn').classList.toggle('active');
+            document.querySelector('.mobile-menu').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

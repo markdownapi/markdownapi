@@ -7,7 +7,7 @@
 
 export type ModelTier = 'haiku' | 'sonnet' | 'opus';
 
-export type SpecFormat = 'openapi' | 'mapi';
+export type SpecFormat = 'openapi' | 'mapi' | 'skill';
 
 export type ApiName = 'anthropic' | 'github' | 'notion' | 'google-cloud';
 

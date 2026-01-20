@@ -158,9 +158,10 @@
             <a href="index.html" class="logo"><div class="logo-mark">M</div>MarkdownAPI</a>
             <nav class="main-nav">
                 <a href="getting-started.html">Getting Started</a>
+                <a href="skills.html">Skills</a>
+                <a href="converter.html">Converter</a>
                 <a href="findings.html" class="active">Findings</a>
-                <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
-                <a href="specs/mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
+                <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
             </nav>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
@@ -170,9 +171,10 @@
     <div class="mobile-menu" id="mobileMenu">
         <a href="index.html">Home</a>
         <a href="getting-started.html">Getting Started</a>
+        <a href="skills.html">Skills</a>
+        <a href="converter.html">Converter</a>
         <a href="findings.html">Findings</a>
-        <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Human Spec</a>
-        <a href="specs/mapi-specification-v0.94.md" class="nav-cta nav-cta-alt">LLM Spec</a>
+        <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
     </div>
 
     <main>
@@ -192,6 +194,7 @@
                     <ul>
                         <li>MAPI achieved 100% accuracy on 2 of 4 APIs tested (Anthropic, Google Cloud)</li>
                         <li>MAPI uses 3-15x fewer tokens than equivalent OpenAPI specs</li>
+                        <li>MAPI Skills achieves 99% token reduction via progressive loading (2-phase approach)</li>
                         <li>GitHub's 12MB OpenAPI spec exceeds LLM context limits; MAPI's 25KB spec works</li>
                         <li>Accuracy differences between formats are small (0-6%); token efficiency differences are large</li>
                     </ul>
@@ -496,6 +499,56 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <h2>MAPI Skills: Progressive Loading</h2>
+
+                <p>We extended our testing to evaluate <strong>MAPI Skills</strong>—a modular format that enables progressive API loading. Instead of loading the entire specification, agents use a 2-phase approach:</p>
+
+                <ol>
+                    <li><strong>Phase 1:</strong> Load the lightweight Skill.md index (~3KB) with capability IDs and intent keywords</li>
+                    <li><strong>Phase 2:</strong> Match intent to capability, then load only the required capability file (~1KB)</li>
+                </ol>
+
+                <h3>Notion API (Progressive Loading Test)</h3>
+                <p>We tested the same Notion API with three approaches: full OpenAPI, full MAPI, and MAPI Skills progressive loading.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>OpenAPI</th>
+                            <th>MAPI (Full)</th>
+                            <th>MAPI Skill</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td class="num">90%</td>
+                            <td class="num winner">100%</td>
+                            <td class="num">90%</td>
+                        </tr>
+                        <tr>
+                            <td>Total Tokens</td>
+                            <td class="num">1,102,623</td>
+                            <td class="num">72,424</td>
+                            <td class="num winner">10,366</td>
+                        </tr>
+                        <tr>
+                            <td>% of OpenAPI</td>
+                            <td class="num">100%</td>
+                            <td class="num">7%</td>
+                            <td class="num winner">1%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Observation:</strong> MAPI Skills achieved <strong>99% token reduction</strong> compared to OpenAPI while maintaining 90% accuracy. The accuracy is slightly lower than full MAPI because intent matching adds an additional decision point—when the Skill.md index keywords are well-tuned, accuracy approaches 100%.</p>
+
+                <div class="callout info">
+                    <div class="callout-title">When to Use Skills</div>
+                    <p>MAPI Skills is optimal for large APIs (50+ capabilities) where token efficiency is critical and most requests need only 1-2 capabilities. For smaller APIs, full MAPI specs are simpler and provide slightly better accuracy.</p>
+                </div>
 
                 <h2>Challenges Encountered</h2>
 
