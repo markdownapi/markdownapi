@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAPI Skill Authoring Guide - Markdown API</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #D4A03E;
+            --burnt-orange: #C85D3E;
+            --teal: #2A7B7B;
+            --olive: #5E7153;
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --charcoal: #2D2D2D;
+            --light-charcoal: #4A4A4A;
+            --sand: #E8E0D5;
+            --code-bg: #1E1E1E;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            background: var(--cream);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        header .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--burnt-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .main-nav { display: flex; align-items: center; gap: 2rem; }
+        .main-nav a { text-decoration: none; color: var(--light-charcoal); font-size: 0.95rem; font-weight: 500; transition: color 0.2s ease; }
+        .main-nav a:hover { color: var(--teal); }
+        .main-nav a.nav-cta { background: var(--teal); color: white; padding: 0.6rem 1.25rem; border-radius: 8px; }
+        .main-nav a.nav-cta:hover { background: #237070; color: white; }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 200; }
+        .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--charcoal); margin: 5px 0; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--charcoal); z-index: 150; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: var(--cream); text-decoration: none; font-size: 1.5rem; font-weight: 600; padding: 1rem 2rem; min-height: 48px; display: flex; align-items: center; }
+        .mobile-menu a:hover { color: var(--mustard); }
+        .mobile-menu a.nav-cta { background: var(--teal); border-radius: 8px; font-size: 1.25rem; }
+
+        /* Layout */
+        .page-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 3rem;
+        }
+
+        /* Sidebar TOC */
+        .sidebar {
+            padding: 2rem 0 2rem 2rem;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--teal);
+            margin-bottom: 1rem;
+        }
+
+        .toc a {
+            display: block;
+            color: var(--light-charcoal);
+            text-decoration: none;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .toc a:hover, .toc a.active {
+            color: var(--teal);
+            border-left-color: var(--teal);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 2rem 4rem 0;
+            max-width: 800px;
+        }
+
+        .spec-title-block {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--sand);
+        }
+
+        .spec-title-block h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-meta {
+            font-size: 0.95rem;
+            color: var(--light-charcoal);
+        }
+
+        h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 2.5rem 0 1rem;
+            padding-top: 1rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 2rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--light-charcoal);
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--light-charcoal);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--charcoal);
+            font-weight: 600;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--sand);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: var(--burnt-orange);
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            color: #D4D4D4;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        th {
+            background: var(--charcoal);
+            color: var(--cream);
+            font-weight: 600;
+        }
+
+        tr:hover td {
+            background: rgba(42, 123, 123, 0.05);
+        }
+
+        /* Callout */
+        .callout {
+            background: var(--warm-white);
+            border-left: 4px solid var(--teal);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .callout p:last-child {
+            margin-bottom: 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--sand);
+            margin: 2rem 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: var(--mustard);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            .page-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .main-content { padding: 2rem; max-width: 100%; }
+            .main-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <div class="logo-mark">M</div>
+                MarkdownAPI
+            </a>
+            <nav class="main-nav">
+                <a href="../getting-started.html">Get Started</a>
+                <a href="../skills.html">Skills</a>
+                <a href="../converter.html">Converter</a>
+                <a href="../findings.html">Findings</a>
+                <a href="mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html">Home</a>
+        <a href="../getting-started.html">Get Started</a>
+        <a href="../skills.html">Skills</a>
+        <a href="../converter.html">Converter</a>
+        <a href="../findings.html">Findings</a>
+        <a href="mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
+    </div>
+
+    <div class="page-layout">
+        <aside class="sidebar">
+            <div class="toc-title">Contents</div>
+            <nav class="toc">
+                <a href="#overview">Overview</a>
+                <a href="#folder-structure">Folder Structure</a>
+                <a href="#skill-md">Skill.md (Index File)</a>
+                <a href="#capability-files">Capability Files</a>
+                <a href="#common-files">Common Files</a>
+                <a href="#agent-loading">Agent Loading Flow</a>
+                <a href="#response-format">Response Format</a>
+                <a href="#bundling">Bundling</a>
+                <a href="#when-to-use">When to Use</a>
+                <a href="#relationship">Relationship to MAPI</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="spec-title-block">
+                <h1>MAPI Skill Authoring Guide</h1>
+                <p class="spec-meta">Draft &mdash; January 2026 &bull; Modular MAPI for Agent-Friendly Progressive Loading</p>
+            </div>
+
+            <h2 id="overview">Overview</h2>
+            <p>The MAPI Skill format is a modular authoring structure that enables agents to load API capabilities selectively, avoiding the token overhead of loading an entire specification. This is particularly valuable for large APIs (100+ capabilities) where full-spec loading would consume significant context window space.</p>
+
+            <p><strong>Two distribution formats, one source:</strong></p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Format</th>
+                        <th>Use Case</th>
+                        <th>Consumer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Bundled</strong> (single <code>.mapi.md</code> file)</td>
+                        <td>Full API visibility</td>
+                        <td>Postman, API gateways, documentation tools, SDK generators</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skill</strong> (modular folder structure)</td>
+                        <td>Selective capability loading</td>
+                        <td>LLM agents, agentic harnesses (Goose, Letta, Claude, etc.)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>The Skill format is the recommended <strong>authoring format</strong>. A bundled single-file MAPI can be generated from it for tools that require the complete specification.</p>
+
+            <hr>
+
+            <h2 id="folder-structure">Folder Structure</h2>
+
+<pre><code>api-name/
+├── Skill.md                 # Index: capability inventory + intent matching
+├── common/
+│   ├── auth.md              # Authentication patterns
+│   ├── pagination.md        # Pagination conventions (if applicable)
+│   └── schemas/
+│       ├── user.md          # Shared User type
+│       └── error.md         # Standard error shapes
+└── capabilities/
+    ├── users.create.md      # One file per capability
+    ├── users.get.md
+    ├── users.list.md
+    └── ...</code></pre>
+
+            <hr>
+
+            <h2 id="skill-md">Skill.md (Index File)</h2>
+
+            <p>The <code>Skill.md</code> file serves as the entry point. It contains:</p>
+
+            <ol>
+                <li>API-level metadata (base URL, auth type)</li>
+                <li>Capability index with intent keywords</li>
+                <li>Pointers to capability files and their dependencies</li>
+            </ol>
+
+            <h3>Structure</h3>
+
+<pre><code># {API Name}
+
+{Brief description of what this API does.}
+
+~~~meta
+version: 1.0.0
+base_url: https://api.example.com/v1
+auth: bearer
+~~~
+
+## Common Dependencies
+
+| File | Description |
+|------|-------------|
+| common/auth.md | Authentication setup and token handling |
+| common/schemas/user.md | User object definition |
+| common/schemas/error.md | Standard error response |
+
+## Capabilities
+
+| ID | Intent Keywords | File | Dependencies |
+|----|-----------------|------|--------------|
+| users.create | create user, add user, register user, new account | capabilities/users.create.md | auth, schemas/user |
+| users.get | get user, fetch user, user details, user by id | capabilities/users.get.md | auth, schemas/user |
+| users.list | list users, all users, search users | capabilities/users.list.md | auth, schemas/user, pagination |
+| users.delete | delete user, remove user | capabilities/users.delete.md | auth |</code></pre>
+
+            <h3>Intent Keywords</h3>
+
+            <p>Intent keywords help agents match natural language requests to capabilities. Guidelines:</p>
+
+            <ul>
+                <li>Include common synonyms ("create", "add", "new")</li>
+                <li>Include task descriptions ("register user", "new account")</li>
+                <li>Include negative hints in the capability file's Intention section when disambiguation is needed</li>
+            </ul>
+
+            <hr>
+
+            <h2 id="capability-files">Capability Files</h2>
+
+            <p>Each capability file contains a single MAPI capability definition using standard MAPI syntax.</p>
+
+            <h3>Example: <code>capabilities/users.create.md</code></h3>
+
+<pre><code># Capability: Create User
+
+~~~meta
+id: users.create
+transport: HTTP POST /users
+auth: required
+~~~
+
+## Intention
+
+Create a new user account. Use this when registering a new user in the system.
+Requires a unique email address. If you need to update an existing user, use
+`users.update` instead.
+
+## Input
+
+```typescript
+interface CreateUserRequest {
+  email: string;         // format: email
+  name: string;          // 1-100 chars
+  password: string;      // min: 8 chars
+  role?: "admin" | "member";  // default: "member"
+}
+```
+
+## Output
+
+```typescript
+interface CreateUserResponse {
+  user: User;
+  token: string;         // Initial auth token
+}
+```
+
+## Errors
+
+- `email_taken` (409): Email address already registered</code></pre>
+
+            <hr>
+
+            <h2 id="common-files">Common Files</h2>
+
+            <p>The <code>common/</code> folder contains shared definitions referenced by multiple capabilities.</p>
+
+            <h3>common/auth.md</h3>
+
+<pre><code># Authentication
+
+This API uses Bearer token authentication.
+
+## Obtaining a Token
+
+1. Register an application in the Developer Dashboard
+2. Use client credentials flow or authorization code flow
+3. Include token in `Authorization: Bearer {token}` header
+
+## Token Lifetime
+
+- Access tokens expire after 1 hour
+- Use refresh tokens for long-running processes
+
+## Scopes
+
+| Scope | Description |
+|-------|-------------|
+| users:read | Read user information |
+| users:write | Create and modify users |
+| admin | Full administrative access |</code></pre>
+
+            <h3>common/schemas/user.md</h3>
+
+<pre><code># User Schema
+
+```typescript
+interface User {
+  id: string;            // UUID
+  email: string;
+  name: string;
+  role: "admin" | "member";
+  created_at: string;    // ISO 8601
+  updated_at: string;    // ISO 8601
+}
+```</code></pre>
+
+            <hr>
+
+            <h2 id="agent-loading">Agent Loading Flow</h2>
+
+            <p>When an agent receives a request like "create a new user named Alice":</p>
+
+            <ol>
+                <li><strong>Load Skill.md</strong> &mdash; Agent reads the index (~2-5KB)</li>
+                <li><strong>Match intent</strong> &mdash; "create user" matches <code>users.create</code></li>
+                <li><strong>Load capability + dependencies</strong> &mdash; Agent fetches:
+                    <ul>
+                        <li><code>capabilities/users.create.md</code></li>
+                        <li><code>common/auth.md</code></li>
+                        <li><code>common/schemas/user.md</code></li>
+                    </ul>
+                </li>
+                <li><strong>Construct request</strong> &mdash; Agent has everything needed to build the API call</li>
+            </ol>
+
+            <div class="callout">
+                <p><strong>Total context loaded:</strong> ~3-5KB (vs. potentially 50KB+ for full API spec)</p>
+            </div>
+
+            <hr>
+
+            <h2 id="response-format">Skill Response Format</h2>
+
+            <p>When an agent invokes a skill capability, the skill returns a structured response enabling the harness to execute the API call:</p>
+
+<pre><code>## Request
+
+```json
+{
+  "method": "POST",
+  "url": "https://api.example.com/v1/users",
+  "headers": {
+    "Authorization": "Bearer ${API_TOKEN}",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "email": "alice@example.com",
+    "name": "Alice",
+    "password": "securepass123"
+  }
+}
+```
+
+## Debug (curl)
+
+```bash
+curl -X POST "https://api.example.com/v1/users" \
+  -H "Authorization: Bearer $API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com","name":"Alice","password":"securepass123"}'
+```</code></pre>
+
+            <p>The structured request object allows programmatic execution. The curl command enables debugging and manual testing.</p>
+
+            <hr>
+
+            <h2 id="bundling">Bundling</h2>
+
+            <p>To generate a single-file MAPI specification from a Skill structure:</p>
+
+<pre><code>mapi bundle ./api-name -o api-name.mapi.md</code></pre>
+
+            <p>The bundler:</p>
+
+            <ol>
+                <li>Reads <code>Skill.md</code> for metadata and capability order</li>
+                <li>Inlines all common definitions into Global Types</li>
+                <li>Appends each capability file</li>
+                <li>Outputs a valid single-file MAPI specification</li>
+            </ol>
+
+            <hr>
+
+            <h2 id="when-to-use">When to Use Skill Format</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>API Size</th>
+                        <th>Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Small (&lt; 20 capabilities)</td>
+                        <td>Single-file MAPI is sufficient</td>
+                    </tr>
+                    <tr>
+                        <td>Medium (20-100 capabilities)</td>
+                        <td>Skill format recommended</td>
+                    </tr>
+                    <tr>
+                        <td>Large (100+ capabilities)</td>
+                        <td>Skill format strongly recommended</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>The threshold depends on context window constraints. As a rule of thumb: if your bundled MAPI exceeds 30KB, the Skill format will significantly improve agent efficiency.</p>
+
+            <hr>
+
+            <h2 id="relationship">Relationship to MAPI Spec</h2>
+
+            <p>The Skill format uses standard MAPI syntax for all capability and schema definitions. It adds:</p>
+
+            <ul>
+                <li>A folder structure convention</li>
+                <li>The <code>Skill.md</code> index file format</li>
+                <li>Intent keywords for capability matching</li>
+                <li>A defined agent loading flow</li>
+            </ul>
+
+            <p>The core <a href="mapi-specification-v0.94.html" style="color: var(--teal);">MAPI specification (v0.94)</a> remains the authoritative reference for capability syntax, metadata fields, and schema conventions.</p>
+
+            <hr>
+
+            <p><em>&mdash; End of Guide &mdash;</em></p>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 MAPI Project &bull; <a href="../authors.html">The Authors</a></p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
