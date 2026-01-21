@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/
+
+# Generated test outputs
+demo-skill/
+tests/popularAPIs/anthropic/anthropic-skill/
+tests/popularAPIs/anthropic/anthropic-skill-llm/
