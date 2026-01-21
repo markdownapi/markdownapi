@@ -664,9 +664,181 @@
             color: rgba(255,255,255,0.3);
             margin: 0 1rem;
         }
+
+        /* Preview Modal */
+        .preview-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(45, 45, 45, 0.85);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .preview-modal-overlay.hidden {
+            display: none;
+        }
+
+        .preview-modal {
+            background: var(--warm-white);
+            border-radius: 20px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+        }
+
+        .preview-modal-header {
+            background: var(--burnt-orange);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .preview-modal-header h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .preview-modal-header h2 svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .preview-modal-body {
+            padding: 2rem;
+        }
+
+        .preview-modal-body p {
+            color: var(--light-charcoal);
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+
+        .preview-modal-body h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .preview-modal-body h3:first-of-type {
+            margin-top: 0.5rem;
+        }
+
+        .preview-modal-body ul {
+            margin: 0 0 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--light-charcoal);
+        }
+
+        .preview-modal-body li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .preview-modal-body .unproven {
+            background: #FDF6F3;
+            border: 1px solid #E8D5CF;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .preview-modal-body .unproven h3 {
+            color: var(--burnt-orange);
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .preview-modal-body .unproven ul {
+            margin-bottom: 0;
+        }
+
+        .preview-modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--sand);
+            text-align: center;
+        }
+
+        .preview-modal-btn {
+            background: var(--teal);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .preview-modal-btn:hover {
+            background: #237070;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .preview-modal-header {
+                padding: 1.25rem 1.5rem;
+            }
+            .preview-modal-body {
+                padding: 1.5rem;
+            }
+            .preview-modal-footer {
+                padding: 1.25rem 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Technology Preview Modal -->
+    <div class="preview-modal-overlay" id="previewModal">
+        <div class="preview-modal">
+            <div class="preview-modal-header">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                    Technology Preview
+                </h2>
+            </div>
+            <div class="preview-modal-body">
+                <p><strong>MAPI is not production-ready.</strong> We're still adding test cases and the results presented on this site are preliminary.</p>
+
+                <h3>Concepts that feel right</h3>
+                <ul>
+                    <li>Using Markdown as a descriptor format for APIs</li>
+                    <li>Using Markdown to describe the spec itself to LLMs</li>
+                    <li>Combining RESTful, Async, Webhooks, and other patterns under one format</li>
+                    <li>Allowing an API spec to be read via Progressive Disclosure</li>
+                </ul>
+
+                <div class="unproven">
+                    <h3>Might be right, but unproven</h3>
+                    <ul>
+                        <li>Using Skills (as in <a href="https://agentskills.io" target="_blank" rel="noopener">AgentSkills.io</a>) to capture an API</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="preview-modal-footer">
+                <button class="preview-modal-btn" onclick="dismissPreviewModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
     <header>
         <div class="container">
             <a href="/" class="logo">
@@ -875,6 +1047,10 @@
         function toggleMobileMenu() {
             document.getElementById('mobileMenu').classList.toggle('active');
             document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+
+        function dismissPreviewModal() {
+            document.getElementById('previewModal').classList.add('hidden');
         }
     </script>
 </body>
