@@ -850,6 +850,7 @@
                 <a href="skills.html">Skills</a>
                 <a href="converter.html">Converter</a>
                 <a href="findings.html">Findings</a>
+                <a href="get-involved.html">Get Involved</a>
                 <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
             </nav>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
@@ -862,6 +863,7 @@
         <a href="skills.html">Skills</a>
         <a href="converter.html">Converter</a>
         <a href="findings.html">Findings</a>
+        <a href="get-involved.html">Get Involved</a>
         <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
     </div>
 
@@ -1017,12 +1019,12 @@
                         </ul>
                     </div>
                     <div class="comparison-card mapi-card">
-                        <h3>MAPI: The Description Format</h3>
+                        <h3>MAPI & Skills: The Description Format</h3>
                         <p class="card-tagline">How LLMs understand APIs</p>
                         <ul>
                             <li><strong>Documentation layer</strong> — Describes what an API does, when to use it, and why</li>
                             <li><strong>Semantic understanding</strong> — Intentions, auth context, and business rules in prose</li>
-                            <li><strong>Design-time concern</strong> — Consumed before execution, informing decisions</li>
+                            <li><strong>Progressive loading</strong> — Skills let agents load only the capabilities they need</li>
                             <li><strong>Analogous to</strong> — OpenAPI, API documentation, developer guides</li>
                         </ul>
                     </div>
@@ -1032,7 +1034,7 @@
                     <div class="mcp-callout-content">
                         <h4>They work together</h4>
                         <p>MCP tools have names and JSON schemas, but schemas don't explain <em>when</em> to choose one tool over another, <em>what scopes</em> you need, or <em>why</em> the API works the way it does. That's what MAPI provides—the semantic context that helps LLMs reason about API usage, not just execute it.</p>
-                        <p class="mcp-example">An agent might read a <strong>MAPI spec</strong> to understand an API's capabilities, then use <strong>MCP</strong> (or HTTP) to invoke them.</p>
+                        <p class="mcp-example">An agent reads a <strong>Skill index</strong> to choose a capability, loads just that file, then invokes via <strong>MCP</strong> or HTTP.</p>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Involved - Markdown API (MAPI)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://markdownapi.org/get-involved.html">
+    <meta property="og:title" content="Get Involved - Help Build MAPI">
+    <meta property="og:description" content="MAPI is being built in public. Help us prove the concept, improve the spec, and enable adoption.">
+    <meta property="og:image" content="https://markdownapi.org/social-preview.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://markdownapi.org/get-involved.html">
+    <meta name="twitter:title" content="Get Involved - Help Build MAPI">
+    <meta name="twitter:description" content="MAPI is being built in public. Help us prove the concept, improve the spec, and enable adoption.">
+    <meta name="twitter:image" content="https://markdownapi.org/social-preview.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #D4A03E;
+            --burnt-orange: #C85D3E;
+            --teal: #2A7B7B;
+            --olive: #5E7153;
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --charcoal: #2D2D2D;
+            --light-charcoal: #4A4A4A;
+            --sand: #E8E0D5;
+            --green: #4A7C59;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+        .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { padding: 1.5rem 0; }
+        header .container-wide { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.25rem; font-weight: 600; color: var(--teal); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-mark { width: 32px; height: 32px; background: var(--burnt-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
+        .main-nav { display: flex; align-items: center; gap: 2rem; }
+        .main-nav a { text-decoration: none; color: var(--light-charcoal); font-size: 0.95rem; font-weight: 500; transition: color 0.2s ease; }
+        .main-nav a:hover, .main-nav a.active { color: var(--teal); }
+        .main-nav a.nav-cta { background: var(--teal); color: white; padding: 0.6rem 1.25rem; border-radius: 8px; }
+        .main-nav a.nav-cta:hover { background: #237070; color: white; }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 200; }
+        .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--charcoal); margin: 5px 0; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--charcoal); z-index: 150; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: var(--cream); text-decoration: none; font-size: 1.5rem; font-weight: 600; padding: 1rem 2rem; min-height: 48px; display: flex; align-items: center; }
+        .mobile-menu a:hover { color: var(--mustard); }
+        .mobile-menu a.nav-cta { background: var(--teal); border-radius: 8px; font-size: 1.25rem; }
+
+        /* Page Header */
+        .page-header { padding: 3rem 0 2rem; border-bottom: 1px solid var(--sand); }
+        .page-header h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: 2.75rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem; }
+        .page-header .subtitle { font-size: 1.15rem; color: var(--light-charcoal); max-width: 700px; line-height: 1.7; }
+
+        /* Content */
+        .content { padding: 3rem 0 4rem; }
+        .content h2 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.75rem; font-weight: 600; color: var(--charcoal); margin: 3rem 0 1rem; padding-top: 1rem; border-top: 1px solid var(--sand); }
+        .content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+        .content h3 { font-size: 1.2rem; font-weight: 600; color: var(--charcoal); margin: 2rem 0 0.75rem; }
+        .content p { font-size: 1.05rem; color: var(--light-charcoal); margin-bottom: 1.25rem; }
+        .content ul, .content ol { margin: 0 0 1.5rem 1.5rem; color: var(--light-charcoal); }
+        .content li { font-size: 1.05rem; margin-bottom: 0.5rem; }
+        .content strong { color: var(--charcoal); font-weight: 600; }
+        .content code { background: var(--sand); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--burnt-orange); }
+        .content a { color: var(--teal); text-decoration: none; }
+        .content a:hover { text-decoration: underline; }
+
+        /* Intro Box */
+        .intro-box { background: linear-gradient(135deg, var(--teal) 0%, #1E5F5F 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0; color: white; }
+        .intro-box h3 { color: white; margin-top: 0; margin-bottom: 1rem; font-size: 1.25rem; }
+        .intro-box p { color: rgba(255,255,255,0.95); margin-bottom: 0; font-size: 1.05rem; line-height: 1.7; }
+        .intro-box p + p { margin-top: 1rem; }
+
+        /* Opportunity Cards */
+        .opportunity-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin: 2rem 0; }
+        .opportunity-card { background: var(--warm-white); border-radius: 12px; padding: 1.75rem; border: 1px solid var(--sand); }
+        .opportunity-card h3 { color: var(--teal); margin: 0 0 0.75rem 0; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem; }
+        .opportunity-card h3 .tag { background: var(--sand); color: var(--light-charcoal); font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .opportunity-card p { margin-bottom: 0.75rem; font-size: 0.95rem; }
+        .opportunity-card p:last-child { margin-bottom: 0; }
+        .opportunity-card .why { color: var(--charcoal); font-weight: 500; }
+
+        /* Contact Box */
+        .contact-box { background: var(--warm-white); border-radius: 16px; padding: 2rem; border: 2px solid var(--mustard); margin: 2rem 0; }
+        .contact-box h3 { color: var(--charcoal); margin: 0 0 1.25rem 0; font-size: 1.25rem; }
+        .contact-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .contact-link { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--charcoal); color: white; padding: 0.75rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: all 0.2s ease; }
+        .contact-link:hover { background: var(--teal); transform: translateY(-2px); }
+        .contact-link svg { width: 18px; height: 18px; }
+
+        /* Standards Box */
+        .standards-box { background: #F5F3F9; border-radius: 12px; padding: 1.75rem; border: 1px solid #D8D3E6; margin: 2rem 0; }
+        .standards-box h3 { color: #6B5B8C; margin: 0 0 0.75rem 0; font-size: 1.1rem; }
+        .standards-box p { margin-bottom: 0; font-size: 0.95rem; color: var(--light-charcoal); }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .mobile-menu-btn { display: block; }
+            .main-nav { display: none; }
+            .page-header h1 { font-size: 2rem; }
+            .contact-links { flex-direction: column; }
+            .contact-link { justify-content: center; }
+        }
+
+        /* Footer */
+        .site-footer { background: var(--charcoal); color: var(--cream); text-align: center; padding: 2rem; margin-top: 3rem; }
+        .site-footer a { color: var(--mustard); text-decoration: none; }
+        .site-footer a:hover { text-decoration: underline; }
+        .footer-divider { color: rgba(255,255,255,0.3); margin: 0 1rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container-wide">
+            <a href="index.html" class="logo"><div class="logo-mark">M</div>MarkdownAPI</a>
+            <nav class="main-nav">
+                <a href="getting-started.html">Get Started</a>
+                <a href="skills.html">Skills</a>
+                <a href="converter.html">Converter</a>
+                <a href="findings.html">Findings</a>
+                <a href="get-involved.html" class="active">Get Involved</a>
+                <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Home</a>
+        <a href="getting-started.html">Get Started</a>
+        <a href="skills.html">Skills</a>
+        <a href="converter.html">Converter</a>
+        <a href="findings.html">Findings</a>
+        <a href="get-involved.html">Get Involved</a>
+        <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
+    </div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Get Involved</h1>
+                <p class="subtitle">MAPI is being built in public. There's a lot of work ahead to prove the concept, improve the spec, and enable real-world adoption.</p>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container">
+
+                <div class="intro-box">
+                    <h3>Building in Public</h3>
+                    <p>MAPI is a technology preview. We believe the core ideas are sound, but we need the community's help to validate them, expand the test suite, build tooling, and get Skills into the hands of agent developers.</p>
+                    <p>We're not trying to own this. We want to embrace existing standards like <a href="https://agents-md.org" style="color: var(--mustard);">Agents.md</a> and <a href="https://agentskills.io" style="color: var(--mustard);">AgentSkills.io</a>, and ultimately contribute MAPI to a standards body once it's proven in the real world.</p>
+                </div>
+
+                <h2>Where We Need Help</h2>
+
+                <p>These are opportunities we've identified but don't have bandwidth to pursue ourselves. If any of these interest you, we'd love to collaborate.</p>
+
+                <div class="opportunity-grid">
+                    <div class="opportunity-card">
+                        <h3>Reference Skills for Popular APIs <span class="tag">High Impact</span></h3>
+                        <p class="why">People learn by example. Having battle-tested Skills for popular APIs makes adoption tangible.</p>
+                        <p>We've built Skills for Anthropic, GitHub, and GCP Billing. The ecosystem needs Skills for Stripe, Twilio, Slack, OpenAI, Notion, Linear, Supabase, and more. Each Skill should include E2E tests that prove it actually works against the live API.</p>
+                    </div>
+
+                    <div class="opportunity-card">
+                        <h3>VS Code Extension</h3>
+                        <p class="why">Developers live in their IDE. Good DX signals a mature ecosystem.</p>
+                        <p>An extension that provides syntax highlighting for <code>.mapi.md</code> and <code>Skill.md</code> files, validation against the spec, and commands like "Convert OpenAPI to Skill" would make authoring Skills much easier.</p>
+                    </div>
+
+                    <div class="opportunity-card">
+                        <h3>Skill Loader Library</h3>
+                        <p class="why">Skills are documentation until agents can consume them programmatically.</p>
+                        <p>A library that fetches a Skill from a URL, parses its capabilities, and returns structured data that agent frameworks can use. This is the bridge between "Skill as documentation" and "Skill as executable spec."</p>
+                    </div>
+
+                    <div class="opportunity-card">
+                        <h3>Registry &amp; Aggregator Support</h3>
+                        <p class="why">Discovery drives adoption. If people can't find Skills, they won't use them.</p>
+                        <p>Platforms like Smithery.ai, Glama, and PulseMCP index MCP servers. We'd love to see Skills indexed alongside them. We can define a <code>skill-manifest.json</code> schema to make indexing easy, but we need registry operators to adopt it.</p>
+                    </div>
+
+                    <div class="opportunity-card">
+                        <h3>Well-Known Self-Publishing</h3>
+                        <p class="why">API providers shouldn't depend on registries to publish their Skills.</p>
+                        <p>A <code>/.well-known/skill/Skill.md</code> convention would let any API provider self-host their Skill at a predictable URL. Agents and crawlers could discover Skills automatically, just like <code>robots.txt</code> or <code>security.txt</code>.</p>
+                    </div>
+
+                    <div class="opportunity-card">
+                        <h3>Agent Framework Integrations</h3>
+                        <p class="why">If LangChain, LlamaIndex, or Claude Code natively understand Skills, adoption follows.</p>
+                        <p>Once a skill-loader library exists, we need adapters for popular agent frameworks. Show that Skills can be loaded and converted to tool definitions with minimal friction.</p>
+                    </div>
+                </div>
+
+                <h2>Standards Alignment</h2>
+
+                <div class="standards-box">
+                    <h3>Our Approach to Standardization</h3>
+                    <p>We're not racing to submit MAPI to a standards body. Instead, we believe the right path is to embrace existing community standards like Agents.md and AgentSkills.io, prove the concepts work through real-world adoption, and then consider formal standardization once the spec has been battle-tested. If you're working on adjacent standards, we'd love to talk.</p>
+                </div>
+
+                <h2>Get in Touch</h2>
+
+                <p>Whether you want to contribute code, write a Skill, integrate with a platform, or just share feedback, we'd love to hear from you.</p>
+
+                <div class="contact-box">
+                    <h3>Reach Out</h3>
+                    <div class="contact-links">
+                        <a href="https://github.com/markdownapi" class="contact-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                        <a href="mailto:jeffrschneider@gmail.com" class="contact-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            Email
+                        </a>
+                        <a href="https://www.linkedin.com/in/schneiderjeff/" class="contact-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://x.com/jeffrschneider" class="contact-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            Twitter
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 MAPI Project <span class="footer-divider">|</span> <a href="authors.html">The Authors</a></p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
