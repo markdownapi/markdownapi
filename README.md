@@ -34,7 +34,7 @@ MAPI is designed for:
 
 ```
 /
-├── website/                 # Marketing site (markdownapi.org)
+├── docs/                    # Website (markdownapi.org, served by GitHub Pages)
 │   ├── index.html
 │   ├── specs/               # Specification documents
 │   └── guides/              # Conversion guides
