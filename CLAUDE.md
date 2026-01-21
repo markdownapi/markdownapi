@@ -1,5 +1,13 @@
 # Claude Project Instructions
 
+## Repository Structure
+
+- **GitHub**: `github.com/markdownapi/markdownapi` (not the old jeffrschneider repo)
+- **Website files**: `/docs` (served by GitHub Pages)
+- **CLI**: `/cli`
+- **Converter library**: `/lib/mapi-converter`
+- **E2E tests**: `/tests/harness`
+
 ## Testing Requirements
 
 When testing API specifications (MAPI, OpenAPI, or Skills), tests are **only valid** if they:
