@@ -360,6 +360,206 @@
             text-decoration: underline;
         }
 
+        /* Try It Now Section */
+        .try-it-section {
+            background: linear-gradient(135deg, var(--charcoal) 0%, #1a1a1a 100%);
+            color: var(--cream);
+            padding: 3rem 0 4rem;
+        }
+
+        .try-it-section h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--mustard);
+        }
+
+        .try-it-section .intro {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .try-it-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .try-it-steps {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .try-it-steps h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--cream);
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .step-content code {
+            background: rgba(212, 160, 62, 0.2);
+            color: var(--mustard);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .example-prompts {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .example-prompts h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--mustard);
+            margin-bottom: 0.75rem;
+        }
+
+        .example-prompts ul {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .example-prompts li {
+            padding: 0.4rem 0;
+            opacity: 0.85;
+        }
+
+        .example-prompts li::before {
+            content: '"';
+            color: var(--teal);
+        }
+
+        .example-prompts li::after {
+            content: '"';
+            color: var(--teal);
+        }
+
+        .spec-container {
+            position: relative;
+        }
+
+        .spec-container h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--mustard);
+            margin-bottom: 0.75rem;
+        }
+
+        .spec-box {
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .spec-box pre {
+            margin: 0;
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .spec-box code {
+            color: #e0e0e0;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 2rem;
+            right: 0.5rem;
+            background: var(--teal);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: #237070;
+        }
+
+        .copy-btn.copied {
+            background: var(--olive);
+        }
+
+        .try-it-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .try-it-note a {
+            color: var(--mustard);
+        }
+
+        @media (max-width: 900px) {
+            .try-it-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .spec-box pre {
+                max-height: 300px;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .primary-cases {
@@ -440,12 +640,149 @@
         <a href="specs/mapi-specification-v0.94.html" class="nav-cta">Read Spec</a>
     </div>
 
+    <section class="try-it-section">
+        <div class="container">
+            <h2>Try it in 30 seconds</h2>
+            <p class="intro">Copy this API spec, paste it into any AI assistant, and ask it to fetch data. No API key needed.</p>
+
+            <div class="try-it-grid">
+                <div class="spec-container">
+                    <h3>Hacker News API Spec</h3>
+                    <button class="copy-btn" onclick="copySpec()">Copy</button>
+                    <div class="spec-box">
+                        <pre><code id="specContent"># Hacker News API
+
+Read-only access to Hacker News stories, comments, and users. No authentication required.
+
+~~~meta
+version: 1.0
+base_url: https://hacker-news.firebaseio.com/v0
+auth: none
+content_type: application/json
+~~~
+
+---
+
+## Capability: Get Top Stories
+
+~~~meta
+id: topstories
+transport: HTTP GET /topstories.json
+~~~
+
+### Intention
+
+Get the IDs of the current top 500 stories on Hacker News, ranked by score.
+
+### Output
+
+Array of integer story IDs, ordered by current rank (first = #1 story).
+
+---
+
+## Capability: Get Item
+
+~~~meta
+id: item.get
+transport: HTTP GET /item/{id}.json
+~~~
+
+### Intention
+
+Get details about any item (story, comment, job, poll) by its ID.
+
+### Input
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | integer | yes | The item's unique ID (path parameter) |
+
+### Output
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | integer | The item's unique ID |
+| type | string | "story", "comment", "job", "poll", or "pollopt" |
+| by | string | Username of the author |
+| time | integer | Unix timestamp of creation |
+| title | string | Title (stories, jobs, polls only) |
+| url | string | URL of the story (if external link) |
+| score | integer | Points/upvotes |
+| descendants | integer | Total comment count |
+
+---
+
+## Capability: Get User
+
+~~~meta
+id: user.get
+transport: HTTP GET /user/{username}.json
+~~~
+
+### Intention
+
+Get a user's public profile by username.
+
+### Input
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| username | string | yes | Case-sensitive username (path parameter) |
+
+### Output
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | The username |
+| karma | integer | The user's karma score |
+| about | string | HTML bio (if set) |</code></pre>
+                    </div>
+                </div>
+
+                <div class="try-it-steps">
+                    <h3>How to use it</h3>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <strong>Copy the spec</strong>
+                            <p>Click the Copy button above</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <strong>Paste into your AI assistant</strong>
+                            <p>Claude, ChatGPT, Cursor, or any LLM-powered tool</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <strong>Ask it to fetch data</strong>
+                            <p>The AI reads the spec and makes real API calls</p>
+                        </div>
+                    </div>
+
+                    <div class="example-prompts">
+                        <h4>Try asking</h4>
+                        <ul>
+                            <li>Show me today's top 3 Hacker News stories</li>
+                            <li>What's the karma for user pg?</li>
+                            <li>Get the newest story and summarize it</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <p class="try-it-note">That's it. The AI understands the spec and calls the API. <a href="examples/hackernews.mapi.md">View full spec</a></p>
+        </div>
+    </section>
+
     <main>
         <section class="page-header">
             <div class="container">
-                <h1>What would you like to do?</h1>
-                <p class="subtitle">MAPI is designed for humans and AI to work together. Choose your path based on what you're trying to accomplish.</p>
-                <p class="terminology-hint">A "MAPI spec" is just your API documentation in a new format—like an OpenAPI document or Swagger file, but designed for both humans and LLMs.</p>
+                <h1>Ready to create your own?</h1>
+                <p class="subtitle">Now that you've seen how it works, here's how to create a MAPI spec for your own API.</p>
             </div>
         </section>
 
@@ -556,6 +893,19 @@
         function toggleMobileMenu() {
             document.getElementById('mobileMenu').classList.toggle('active');
             document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+
+        function copySpec() {
+            const specText = document.getElementById('specContent').innerText;
+            navigator.clipboard.writeText(specText).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
         }
     </script>
 </body>
