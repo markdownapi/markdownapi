@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAPI Specification v0.95 - Markdown API</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #D4A03E;
+            --burnt-orange: #C85D3E;
+            --teal: #2A7B7B;
+            --olive: #5E7153;
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --charcoal: #2D2D2D;
+            --light-charcoal: #4A4A4A;
+            --sand: #E8E0D5;
+            --code-bg: #1E1E1E;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            background: var(--cream);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        header .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--burnt-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--light-charcoal);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .main-nav a:hover { color: var(--teal); }
+
+        .main-nav a.nav-cta {
+            background: var(--teal);
+            color: white;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+        }
+
+        .main-nav a.nav-cta:hover {
+            background: #237070;
+            color: white;
+        }
+
+        .main-nav a.nav-cta-alt { background: var(--burnt-orange); }
+        .main-nav a.nav-cta-alt:hover { background: #A84D32; }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 200; }
+        .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--charcoal); margin: 5px 0; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--charcoal); z-index: 150; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: var(--cream); text-decoration: none; font-size: 1.5rem; font-weight: 600; padding: 1rem 2rem; min-height: 48px; display: flex; align-items: center; }
+        .mobile-menu a:hover { color: var(--mustard); }
+        .mobile-menu a.nav-cta { background: var(--teal); border-radius: 8px; font-size: 1.25rem; }
+        .mobile-menu a.nav-cta-alt { background: var(--burnt-orange); }
+
+        /* Layout */
+        .page-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 3rem;
+        }
+
+        /* Sidebar TOC */
+        .sidebar {
+            padding: 2rem 0 2rem 2rem;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--teal);
+            margin-bottom: 1rem;
+        }
+
+        .toc a {
+            display: block;
+            padding: 0.4rem 0;
+            color: var(--light-charcoal);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s ease;
+        }
+
+        .toc a:hover {
+            color: var(--teal);
+            border-left-color: var(--teal);
+        }
+
+        .toc a.appendix {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--sand);
+        }
+
+        /* Main content */
+        .spec-content {
+            padding: 3rem 3rem 5rem 0;
+            max-width: 900px;
+        }
+
+        /* Title block */
+        .spec-title-block {
+            text-align: center;
+            padding: 3rem 0 4rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        .spec-title-block h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--teal);
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-title-block .version {
+            font-size: 1.5rem;
+            color: var(--light-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-title-block .draft {
+            display: inline-block;
+            background: var(--mustard);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-title-block .tagline {
+            font-size: 1.15rem;
+            color: var(--light-charcoal);
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .spec-title-block .credit {
+            font-size: 0.85rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Section headings */
+        .spec-content h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.85rem;
+            font-weight: 600;
+            color: var(--teal);
+            margin: 3.5rem 0 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--sand);
+        }
+
+        .spec-content h2:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .spec-content h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .spec-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 2rem 0 0.75rem;
+        }
+
+        /* Section numbers */
+        .section-num {
+            display: inline-block;
+            background: var(--burnt-orange);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            border-radius: 6px;
+            margin-right: 0.75rem;
+        }
+
+        .subsection-num {
+            color: var(--burnt-orange);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        /* Paragraphs */
+        .spec-content p {
+            margin-bottom: 1.25rem;
+            color: var(--charcoal);
+        }
+
+        .spec-content p.lead {
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        /* Lists */
+        .spec-content ul, .spec-content ol {
+            margin: 0 0 1.5rem 1.5rem;
+        }
+
+        .spec-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .design-goals {
+            list-style: none;
+            margin-left: 0;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .design-goals li {
+            background: var(--warm-white);
+            border: 1px solid var(--sand);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0;
+        }
+
+        .design-goals .goal-num {
+            width: 32px;
+            height: 32px;
+            background: var(--teal);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .design-goals strong {
+            color: var(--charcoal);
+        }
+
+        /* Tables */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0 2rem;
+            font-size: 0.95rem;
+        }
+
+        .spec-table th {
+            background: var(--teal);
+            color: white;
+            text-align: left;
+            padding: 0.85rem 1rem;
+            font-weight: 600;
+        }
+
+        .spec-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .spec-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        .spec-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--sand);
+            vertical-align: top;
+        }
+
+        .spec-table tr:nth-child(even) {
+            background: var(--warm-white);
+        }
+
+        .spec-table tr:last-child td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+
+        .spec-table tr:last-child td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+
+        .spec-table code {
+            background: rgba(42, 123, 123, 0.1);
+            color: var(--teal);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0 2rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #E8E0D5;
+        }
+
+        .code-block .comment { color: #6A9955; }
+        .code-block .keyword { color: #569CD6; }
+        .code-block .type { color: #4EC9B0; }
+        .code-block .string { color: #CE9178; }
+        .code-block .property { color: #9CDCFE; }
+        .code-block .meta { color: #C586C0; }
+
+        .code-label {
+            display: inline-block;
+            background: var(--charcoal);
+            color: var(--sand);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: -1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Inline code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--sand);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: var(--burnt-orange);
+        }
+
+        /* Callouts */
+        .callout {
+            background: var(--warm-white);
+            border-left: 4px solid var(--olive);
+            border-radius: 0 12px 12px 0;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout.tip {
+            border-left-color: var(--teal);
+        }
+
+        .callout.important {
+            border-left-color: var(--burnt-orange);
+            background: #FDF6F3;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            color: var(--olive);
+        }
+
+        .callout.tip .callout-title { color: var(--teal); }
+        .callout.important .callout-title { color: var(--burnt-orange); }
+
+        .callout p:last-child { margin-bottom: 0; }
+
+        /* Footer */
+        .spec-footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--sand);
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Mobile TOC */
+        .mobile-toc {
+            display: none;
+            background: var(--warm-white);
+            border: 1px solid var(--sand);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-toc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .mobile-toc-header h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--teal);
+            margin: 0;
+        }
+
+        .mobile-toc-toggle {
+            width: 24px;
+            height: 24px;
+            background: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-toc.expanded .mobile-toc-toggle {
+            transform: rotate(45deg);
+        }
+
+        .mobile-toc-content {
+            display: none;
+            padding: 0 1.25rem 1.25rem;
+            border-top: 1px solid var(--sand);
+        }
+
+        .mobile-toc.expanded .mobile-toc-content {
+            display: block;
+        }
+
+        .mobile-toc-content a {
+            display: block;
+            padding: 0.6rem 0;
+            color: var(--light-charcoal);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--sand);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mobile-toc-content a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-toc-content a:hover {
+            color: var(--teal);
+        }
+
+        .mobile-toc-content a.appendix {
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 2px solid var(--sand);
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .mobile-toc {
+                display: block;
+            }
+
+            .spec-content {
+                padding: 2rem;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .mobile-menu-btn { display: block; }
+            .main-nav { display: none; }
+
+            .spec-title-block h1 {
+                font-size: 2.25rem;
+            }
+
+            .spec-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .site-footer a {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+                min-height: 44px;
+            }
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--charcoal);
+            color: var(--cream);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .site-footer a {
+            color: var(--mustard);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-divider {
+            color: rgba(255,255,255,0.3);
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <div class="logo-mark">M</div>
+                MarkdownAPI
+            </a>
+            <nav class="main-nav">
+                <a href="../getting-started.html">Get Started</a>
+                <a href="../skills.html">Skills</a>
+                <a href="../converter.html">Converter</a>
+                <a href="../findings.html">Findings</a>
+                <a href="../get-involved.html">Get Involved</a>
+                <a href="../changelog.html">Changelog</a>
+                <a href="#" class="nav-cta">Read Spec</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html">Home</a>
+        <a href="../getting-started.html">Get Started</a>
+        <a href="../skills.html">Skills</a>
+        <a href="../converter.html">Converter</a>
+        <a href="../findings.html">Findings</a>
+        <a href="../get-involved.html">Get Involved</a>
+        <a href="../changelog.html">Changelog</a>
+        <a href="mapi-specification-v0.95.html" class="nav-cta">Read Spec</a>
+    </div>
+
+    <div class="page-layout">
+        <aside class="sidebar">
+            <div class="toc-title">Contents</div>
+            <nav class="toc">
+                <a href="#document-structure">1. Document Structure</a>
+                <a href="#metadata-block">2. Metadata Block</a>
+                <a href="#global-types">3. Global Types</a>
+                <a href="#capabilities">4. Capabilities</a>
+                <a href="#schemas-constraints">5. Schemas and Constraints</a>
+                <a href="#error-handling">6. Error Handling</a>
+                <a href="#streaming-events">7. Streaming and Events</a>
+                <a href="#message-bus">8. Message Bus Capabilities</a>
+                <a href="#subscriptions">9. Subscriptions</a>
+                <a href="#websocket-channels">10. WebSocket Channels</a>
+                <a href="#webhooks">11. Webhooks</a>
+                <a href="#envelopes">12. Envelopes</a>
+                <a href="#lifecycles">13. Lifecycles</a>
+                <a href="#internal-tools">14. Internal Tools</a>
+                <a href="#collections">15. Collections and File Organization</a>
+                <a href="#conversion">16. Conversion from OpenAPI/AsyncAPI</a>
+                <a href="#progressive-disclosure">17. Progressive Disclosure</a>
+                <a href="#complete-examples">18. Complete Examples</a>
+                <a href="#appendix-a" class="appendix">Appendix A: Constraint Reference</a>
+                <a href="#appendix-b">Appendix B: Transport Strings</a>
+                <a href="#appendix-c">Appendix C: Standard Errors</a>
+                <a href="#appendix-d">Appendix D: Messaging Metadata Reference</a>
+            </nav>
+        </aside>
+
+        <main class="spec-content">
+            <div class="spec-title-block">
+                <h1>Markdown API</h1>
+                <div class="version">(MAPI) Specification v0.95</div>
+                <div class="draft">Draft — February 2026</div>
+                <p class="tagline">A Human, Machine, and Agent Readable API Description Format</p>
+            </div>
+
+            <!-- Mobile TOC (visible only on smaller screens) -->
+            <div class="mobile-toc" id="mobileToc">
+                <div class="mobile-toc-header" onclick="toggleMobileToc()">
+                    <h3>Table of Contents</h3>
+                    <span class="mobile-toc-toggle">+</span>
+                </div>
+                <nav class="mobile-toc-content">
+                    <a href="#document-structure">1. Document Structure</a>
+                    <a href="#metadata-block">2. Metadata Block</a>
+                    <a href="#global-types">3. Global Types</a>
+                    <a href="#capabilities">4. Capabilities</a>
+                    <a href="#schemas-constraints">5. Schemas and Constraints</a>
+                    <a href="#error-handling">6. Error Handling</a>
+                    <a href="#streaming-events">7. Streaming and Events</a>
+                    <a href="#message-bus">8. Message Bus Capabilities</a>
+                    <a href="#subscriptions">9. Subscriptions</a>
+                    <a href="#websocket-channels">10. WebSocket Channels</a>
+                    <a href="#webhooks">11. Webhooks</a>
+                    <a href="#envelopes">12. Envelopes</a>
+                    <a href="#lifecycles">13. Lifecycles</a>
+                    <a href="#internal-tools">14. Internal Tools</a>
+                    <a href="#collections">15. Collections and File Organization</a>
+                    <a href="#conversion">16. Conversion from OpenAPI/AsyncAPI</a>
+                    <a href="#progressive-disclosure">17. Progressive Disclosure</a>
+                    <a href="#complete-examples">18. Complete Examples</a>
+                    <a href="#appendix-a" class="appendix">Appendix A: Constraint Reference</a>
+                    <a href="#appendix-b">Appendix B: Transport Strings</a>
+                    <a href="#appendix-c">Appendix C: Standard Errors</a>
+                    <a href="#appendix-d">Appendix D: Messaging Metadata Reference</a>
+                </nav>
+            </div>
+
+            <h2 id="abstract"><span class="section-num">&sect;</span> Abstract</h2>
+            <p class="lead">Markdown API (MAPI) is an API description format designed for the modern era where APIs must be understood by humans, language models, and traditional tooling alike. MAPI combines the readability of Markdown with the type safety of TypeScript and the semantic clarity of natural language constraints.</p>
+            <p>Unlike OpenAPI, which optimizes for deterministic code generation, MAPI optimizes for semantic understanding, probabilistic reasoning, and unified transport protocols. The result is API documentation that renders beautifully in any Markdown viewer while remaining fully parseable for code generation, validation, and agent orchestration.</p>
+
+            <h2 id="design-goals"><span class="section-num">&starf;</span> Design Goals</h2>
+            <ul class="design-goals">
+                <li><span class="goal-num">1</span><div><strong>Text-First:</strong> The documentation is the specification. Prose context and intent are as important as schema definitions.</div></li>
+                <li><span class="goal-num">2</span><div><strong>TypeScript-Native:</strong> Data shapes use TypeScript interfaces—the most token-efficient and LLM-familiar schema language.</div></li>
+                <li><span class="goal-num">3</span><div><strong>Unified Transport:</strong> HTTP, WebSockets, SSE, message buses, and internal tools coexist in a single format.</div></li>
+                <li><span class="goal-num">4</span><div><strong>Capability-Oriented:</strong> APIs are organized by what they do, not by URL paths or subject names.</div></li>
+                <li><span class="goal-num">5</span><div><strong>Agent-Ready:</strong> Optimized for LLM consumption with explicit intent and constraint sections.</div></li>
+                <li><span class="goal-num">6</span><div><strong>Token-Efficient:</strong> Avoid redundant definitions; don't document what LLMs already know.</div></li>
+                <li><span class="goal-num">7</span><div><strong>Progressive Disclosure:</strong> Task-specific reference cards minimize context window usage.</div></li>
+            </ul>
+
+            <h3 id="a-note-on-authentication">A Note on Authentication</h3>
+            <p>Readers familiar with OpenAPI may notice that MAPI has no dedicated "Security" or "Authentication" section. This is intentional, not an oversight.</p>
+            <p>In MAPI, authentication is a <strong>cross-cutting concern</strong> woven throughout the specification rather than siloed into a single section:</p>
+            <ul>
+                <li><strong>Metadata</strong> declares <em>what</em> authentication is required (<code>auth</code>, <code>auth_flow</code>, <code>auth_scopes</code>)</li>
+                <li><strong>Auth Intention</strong> explains <em>why</em> and <em>when</em>—the prose context LLMs need to reason about auth</li>
+                <li><strong>Logic Constraints</strong> capture <em>behavioral rules</em>—token expiry, scope requirements, error responses</li>
+            </ul>
+            <p>This approach reflects MAPI's Text-First philosophy: authentication requirements are best understood in context, not in isolation. An agent reading a capability should immediately understand its auth requirements alongside its purpose, not cross-reference a separate security section.</p>
+            <p>For detailed guidance on documenting authentication, see the <a href="MAPI-AUTH.md">Auth Reference Card</a>.</p>
+
+            <h2 id="document-structure"><span class="section-num">1</span> Document Structure</h2>
+            <p>A MAPI document is a valid Markdown file with the extension <code>.mapi.md</code>. It consists of these sections:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Purpose</th>
+                        <th>Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Metadata</strong></td>
+                        <td>API-level configuration (version, base URL, auth)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Global Types</strong></td>
+                        <td>Shared TypeScript interfaces</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Envelope</strong></td>
+                        <td>Wire format wrapping all messages</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lifecycles</strong></td>
+                        <td>State machines for stateful resources</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Capabilities</strong></td>
+                        <td>Operations, events, and tools</td>
+                        <td>Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3><span class="subsection-num">1.1</span> File Extension</h3>
+            <p>MAPI files use the <code>.mapi.md</code> extension. This allows them to be recognized as both Markdown (for rendering) and as API specifications (for tooling).</p>
+
+            <div class="code-block">
+<pre>api.mapi.md              <span class="comment"># Single-file API</span>
+messages.mapi.md         <span class="comment"># Resource-specific file</span>
+types/common.mapi.md     <span class="comment"># Shared type definitions</span></pre>
+            </div>
+
+            <h3><span class="subsection-num">1.2</span> General Structure</h3>
+
+            <span class="code-label">MAPI Document Structure</span>
+            <div class="code-block">
+<pre><span class="meta"># API Title</span>
+
+Brief description of the API and its purpose.
+
+<span class="keyword">~~~meta</span>
+<span class="property">version:</span> <span class="string">1.0.0</span>
+<span class="property">base_url:</span> <span class="string">https://api.example.com/v1</span>
+<span class="property">auth:</span> <span class="string">bearer</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">## Global Types</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">User</span> { ... }
+<span class="keyword">```</span>
+
+<span class="meta">## Capability: Create User</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">users.create</span>
+<span class="property">transport:</span> <span class="string">HTTP POST /users</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+...
+
+<span class="meta">### Input</span>
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">CreateUserRequest</span> { ... }
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h2 id="metadata-block"><span class="section-num">2</span> Metadata Block</h2>
+            <p>The metadata block appears at the document level and within each capability. It uses the <code>~~~meta</code> fenced block syntax for explicit boundaries.</p>
+
+            <h3><span class="subsection-num">2.1</span> Document-Level Metadata</h3>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">version:</span> <span class="string">1.0.0</span>
+<span class="property">base_url:</span> <span class="string">https://api.example.com/v1</span>
+<span class="property">auth:</span> <span class="string">bearer</span>
+<span class="property">auth_header:</span> <span class="string">Authorization</span>
+<span class="property">content_type:</span> <span class="string">application/json</span>
+<span class="property">errors:</span> <span class="string">standard</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>version</code></td>
+                        <td>API version string (semver recommended)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>base_url</code></td>
+                        <td>Base URL for all HTTP operations</td>
+                        <td>Conditional</td>
+                    </tr>
+                    <tr>
+                        <td><code>broker_url</code></td>
+                        <td>Message broker connection URL</td>
+                        <td>Conditional</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth</code></td>
+                        <td>Authentication type (bearer, api_key, basic, oauth2, none)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_header</code></td>
+                        <td>Header name for auth token (default: Authorization)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_flow</code></td>
+                        <td>OAuth2 flow type (authorization_code, client_credentials, implicit, password)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_scopes</code></td>
+                        <td>Default required scopes for OAuth2</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_docs_url</code></td>
+                        <td>URL to authentication documentation or onboarding guide</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>content_type</code></td>
+                        <td>Default content type (default: application/json). Use <code>multipart/form-data</code> for file uploads or <code>application/octet-stream</code> for binary data.</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>errors</code></td>
+                        <td>Error convention: standard or custom (default: standard)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>delivery</code></td>
+                        <td>Default delivery guarantee for message bus capabilities: <code>at_most_once</code>, <code>at_least_once</code>, <code>exactly_once</code> (default: at_most_once)</td>
+                        <td>No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout tip">
+                <div class="callout-title">Note</div>
+                <p><code>base_url</code> is required for HTTP-based APIs. <code>broker_url</code> is required for message bus APIs. A document may include both if the API spans both transports.</p>
+            </div>
+
+            <h3><span class="subsection-num">2.2</span> Capability-Level Metadata</h3>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">messages.create</span>
+<span class="property">transport:</span> <span class="string">HTTP POST /v1/messages</span>
+<span class="property">auth:</span> <span class="string">required</span>
+<span class="property">idempotent:</span> <span class="string">false</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td>Unique operation identifier (namespace.action)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>transport</code></td>
+                        <td>Protocol and path (see Appendix B)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth</code></td>
+                        <td>required, optional, or none</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_flow</code></td>
+                        <td>OAuth2 flow override for this capability</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_scopes</code></td>
+                        <td>Scopes required for this capability (overrides document-level)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>idempotent</code></td>
+                        <td>Whether repeated calls are safe</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>deprecated</code></td>
+                        <td>true if operation is deprecated</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>direction</code></td>
+                        <td><code>outbound</code> (default) or <code>inbound</code> — see Section 8.2</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>delivery</code></td>
+                        <td>Delivery guarantee override: <code>at_most_once</code>, <code>at_least_once</code>, <code>exactly_once</code></td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>ordering</code></td>
+                        <td>Message ordering: <code>ordered</code>, <code>unordered</code>, <code>partition_ordered</code> (default: unordered)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>consumer_group</code></td>
+                        <td>Queue group name for load-balanced delivery</td>
+                        <td>No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3><span class="subsection-num">2.3</span> Multipart Uploads and Binary Content</h3>
+            <p>For file uploads, set <code>content_type</code> to <code>multipart/form-data</code> and describe file fields in Logic Constraints:</p>
+
+            <span class="code-label">Multipart File Upload</span>
+            <div class="code-block">
+<pre><span class="meta">## Capability: Upload Document</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">documents.upload</span>
+<span class="property">transport:</span> <span class="string">HTTP POST /documents</span>
+<span class="property">content_type:</span> <span class="string">multipart/form-data</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Input</span>
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">UploadDocumentRequest</span> {
+  <span class="property">file</span>: <span class="type">File</span>;           <span class="comment">// The document file</span>
+  <span class="property">title</span>: <span class="type">string</span>;
+  <span class="property">tags</span>?: <span class="type">string</span>[];
+}
+<span class="keyword">```</span>
+
+<span class="meta">### Logic Constraints</span>
+- <span class="property">file</span> must be PDF, DOCX, or TXT format
+- Maximum file size: 10MB
+- <span class="property">file</span> field name in multipart body: <span class="string">"document"</span></pre>
+            </div>
+
+            <p>For binary downloads, specify <code>application/octet-stream</code> in the Output section:</p>
+
+            <span class="code-label">Binary Download</span>
+            <div class="code-block">
+<pre><span class="meta">## Capability: Download File</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">files.download</span>
+<span class="property">transport:</span> <span class="string">HTTP GET /files/{file_id}/content</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Output</span>
+Returns the raw file bytes with appropriate <span class="property">Content-Type</span> header.
+Response content type: <span class="string">application/octet-stream</span> (or original file MIME type)
+
+<span class="meta">### Logic Constraints</span>
+- <span class="property">Content-Disposition</span> header contains the original filename
+- Large files may use chunked transfer encoding</pre>
+            </div>
+
+            <h2 id="global-types"><span class="section-num">3</span> Global Types</h2>
+            <p>The Global Types section defines reusable TypeScript interfaces that are referenced throughout the specification. This reduces repetition and establishes a consistent vocabulary.</p>
+
+            <h3><span class="subsection-num">3.1</span> Syntax</h3>
+            <p>Global types are defined in a typescript fenced code block under the "Global Types" heading:</p>
+
+            <span class="code-label">TypeScript</span>
+            <div class="code-block">
+<pre><span class="meta">## Global Types</span>
+
+<span class="keyword">```typescript</span>
+<span class="comment">// Primitive type aliases</span>
+<span class="keyword">type</span> <span class="type">UUID</span> = <span class="type">string</span>;      <span class="comment">// format: uuid-v4</span>
+<span class="keyword">type</span> <span class="type">ISO8601</span> = <span class="type">string</span>;   <span class="comment">// format: ISO 8601 datetime</span>
+
+<span class="comment">// Shared interfaces</span>
+<span class="keyword">interface</span> <span class="type">User</span> {
+  <span class="property">id</span>: <span class="type">UUID</span>;
+  <span class="property">email</span>: <span class="type">string</span>;
+  <span class="property">name</span>: <span class="type">string</span>;
+  <span class="property">created_at</span>: <span class="type">ISO8601</span>;
+}
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h3><span class="subsection-num">3.2</span> Referencing Global Types</h3>
+            <p>Once defined, global types can be referenced by name in any capability:</p>
+
+            <div class="code-block">
+<pre><span class="meta">### Output</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">GetUserResponse</span> {
+  <span class="property">user</span>: <span class="type">User</span>;  <span class="comment">// References global User type</span>
+}
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h2 id="capabilities"><span class="section-num">4</span> Capabilities</h2>
+            <p>The Capability is the core unit of MAPI. A capability represents something the API can do—not an HTTP endpoint, but a logical action with clear intent and constraints.</p>
+
+            <h3><span class="subsection-num">4.1</span> Structure</h3>
+            <p>Each capability has the following structure:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Purpose</th>
+                        <th>Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>## Capability: Name</code></td>
+                        <td>Human-readable capability name</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>~~~meta</code> block</td>
+                        <td>Machine-readable metadata</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Intention</code></td>
+                        <td>Why and when to use this capability</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Auth Intention</code></td>
+                        <td>Authentication context for agents</td>
+                        <td>When auth &ne; none</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Logic Constraints</code></td>
+                        <td>Business rules in natural language</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Input</code></td>
+                        <td>Request schema (TypeScript)</td>
+                        <td>Depends</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Output</code></td>
+                        <td>Success response schema</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Errors</code></td>
+                        <td>Non-standard errors only</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>### Example</code></td>
+                        <td>Request/response examples</td>
+                        <td>No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3><span class="subsection-num">4.2</span> The Intention Section</h3>
+            <p>The Intention section is critical for agent comprehension. It explains:</p>
+            <ul>
+                <li>What the capability does (in plain language)</li>
+                <li>When an agent should choose this capability</li>
+                <li>What prerequisites or context are needed</li>
+            </ul>
+
+            <div class="code-block">
+<pre><span class="meta">### Intention</span>
+
+Creates a new message in a conversation with Claude. Use this capability
+when you need to send user input and receive an AI response. The model
+processes the full conversation history, so include all relevant context
+in the messages array.
+
+This is the primary endpoint for all Claude interactions.</pre>
+            </div>
+
+            <h3><span class="subsection-num">4.3</span> Logic Constraints Section</h3>
+            <p>Business rules that cannot be expressed in TypeScript belong here. Use this for behavioral rules, cross-field dependencies, and conditional logic:</p>
+
+            <div class="code-block">
+<pre><span class="meta">### Logic Constraints</span>
+
+- <span class="property">max_tokens</span> must not exceed the model's context window
+- If <span class="property">stream: true</span>, response arrives as Server-Sent Events
+- When <span class="property">tool_choice</span> is specified, <span class="property">tools</span> array must not be empty
+- The total token count of <span class="property">messages</span> + <span class="property">max_tokens</span> must fit within model limits</pre>
+            </div>
+
+            <p><strong>Authentication-related constraints</strong> also belong here when they affect runtime behavior:</p>
+
+            <div class="code-block">
+<pre><span class="meta">### Logic Constraints</span>
+
+- Requests without valid Bearer token return 401 Unauthorized
+- Expired tokens return 401 with <span class="property">error: token_expired</span> in response body
+- Insufficient scopes return 403 with <span class="property">required_scopes</span> array in response
+- Rate limits vary by token tier: 100/min (standard), 1000/min (premium)
+- Service account tokens cannot access user-specific resources</pre>
+            </div>
+
+            <div class="callout tip">
+                <div class="callout-title">Tip</div>
+                <p>Logic Constraints are for rules that affect runtime behavior. TypeScript handles structural validation; Logic Constraints handle semantic validation.</p>
+            </div>
+
+            <h3><span class="subsection-num">4.4</span> The Auth Intention Section</h3>
+            <p>When a capability requires authentication, the Auth Intention section provides the prose context that agents need to understand <em>how</em> to authenticate—not just <em>that</em> they must authenticate.</p>
+
+            <p>The Auth Intention section explains:</p>
+            <ul>
+                <li>How to obtain credentials (the onboarding path)</li>
+                <li>Which scopes or permissions are required</li>
+                <li>Any capability-specific auth considerations</li>
+                <li>Alternatives for different integration patterns (user vs. machine-to-machine)</li>
+            </ul>
+
+            <div class="code-block">
+<pre><span class="meta">### Auth Intention</span>
+
+Requires OAuth2 with <span class="property">payments:write</span> scope. Users obtain tokens through
+the standard authorization code flow at <span class="string">/oauth/authorize</span>.
+
+For server-to-server integrations, use client_credentials flow instead—
+register a service account in the Dashboard under Settings > API Access.
+
+Tokens expire after 1 hour. For long-running processes, implement token
+refresh or request offline_access scope for refresh tokens.</pre>
+            </div>
+
+            <p>Unlike metadata fields which are machine-parseable, Auth Intention provides the contextual understanding an LLM needs to guide users through authentication or to reason about whether cached credentials are still valid.</p>
+
+            <div class="callout tip">
+                <div class="callout-title">When to include</div>
+                <p>Add Auth Intention whenever <code>auth: required</code> and the authentication has nuance beyond "include a Bearer token." Skip it for simple API key authentication where no explanation is needed.</p>
+            </div>
+
+            <h2 id="schemas-constraints"><span class="section-num">5</span> Schemas and Constraints</h2>
+            <p>MAPI uses TypeScript interfaces for schema definitions. TypeScript was chosen for its familiarity to developers and LLMs, its expressiveness, and its token efficiency compared to JSON Schema.</p>
+
+            <h3><span class="subsection-num">5.1</span> TypeScript Conventions</h3>
+            <p>Use standard TypeScript syntax with these conventions:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">interface</span> <span class="type">CreateMessageRequest</span> {
+  <span class="property">model</span>: <span class="string">"claude-sonnet-4-20250514"</span> | <span class="string">"claude-opus-4-20250514"</span>;
+  <span class="property">messages</span>: <span class="type">Message</span>[];
+  <span class="property">max_tokens</span>: <span class="type">number</span>;        <span class="comment">// 1-200000</span>
+  <span class="property">temperature</span>?: <span class="type">number</span>;      <span class="comment">// 0.0-1.0, default 1.0</span>
+  <span class="property">stream</span>?: <span class="type">boolean</span>;          <span class="comment">// default false</span>
+  <span class="property">metadata</span>?: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">string</span>&gt;;
+}</pre>
+            </div>
+
+            <h3><span class="subsection-num">5.2</span> Comment-Based Constraints</h3>
+            <p>Use inline comments for constraints that affect a single field:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Constraint</th>
+                        <th>Applies To</th>
+                        <th>Comment Syntax</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Range</td>
+                        <td>number</td>
+                        <td><code>// 1-100</code></td>
+                    </tr>
+                    <tr>
+                        <td>Min/Max length</td>
+                        <td>string</td>
+                        <td><code>// 1-1000 chars</code></td>
+                    </tr>
+                    <tr>
+                        <td>Pattern</td>
+                        <td>string</td>
+                        <td><code>// format: email</code></td>
+                    </tr>
+                    <tr>
+                        <td>Default</td>
+                        <td>any</td>
+                        <td><code>// default: value</code></td>
+                    </tr>
+                    <tr>
+                        <td>Array bounds</td>
+                        <td>array</td>
+                        <td><code>// 1-10 items</code></td>
+                    </tr>
+                    <tr>
+                        <td>Unique</td>
+                        <td>array</td>
+                        <td><code>// unique</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="error-handling"><span class="section-num">6</span> Error Handling</h2>
+            <p>MAPI assumes standard HTTP error semantics by default. Only document errors that have capability-specific meaning.</p>
+
+            <h3><span class="subsection-num">6.1</span> Standard Errors Convention</h3>
+            <p>When <code>errors: standard</code> is specified in metadata, standard HTTP status codes (400, 401, 403, 404, 409, 422, 429, 500, 503) are understood without explicit documentation.</p>
+            <p>For message bus capabilities (MSG/SUB transports), standard errors use structured error objects in the envelope or reply message rather than HTTP status codes. The error semantics remain the same—the categories (bad request, unauthorized, not found, etc.) apply regardless of transport.</p>
+
+            <h3><span class="subsection-num">6.2</span> Custom Errors</h3>
+            <p>Document only errors with specific semantics:</p>
+
+            <div class="code-block">
+<pre><span class="meta">### Errors</span>
+
+- <span class="property">overloaded</span> (<span class="type">529</span>): API is temporarily overloaded. Retry with exponential backoff.
+- <span class="property">context_length_exceeded</span> (<span class="type">400</span>): Combined input exceeds model's context window.</pre>
+            </div>
+
+            <p>For message bus capabilities, use numeric error codes in structured error objects:</p>
+
+            <div class="code-block">
+<pre><span class="meta">### Errors</span>
+
+- <span class="property">SKILL_NOT_FOUND</span> (<span class="type">3001</span>): The requested skill is not available on this agent.
+- <span class="property">OVERLOADED</span> (<span class="type">4001</span>): Agent is too busy to accept new work.</pre>
+            </div>
+
+            <h2 id="streaming-events"><span class="section-num">7</span> Streaming and Events</h2>
+            <p>MAPI has first-class support for Server-Sent Events (SSE) streaming responses.</p>
+
+            <h3><span class="subsection-num">7.1</span> SSE Transport</h3>
+            <p>Indicate streaming with the <code>(SSE)</code> transport modifier:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">messages.create_stream</span>
+<span class="property">transport:</span> <span class="string">HTTP POST /v1/messages (SSE)</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <h3><span class="subsection-num">7.2</span> Event Types</h3>
+            <p>Define SSE event types using a discriminated union:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">type</span> <span class="type">StreamEvent</span> =
+  | { <span class="property">type</span>: <span class="string">"message_start"</span>; <span class="property">message</span>: <span class="type">Message</span> }
+  | { <span class="property">type</span>: <span class="string">"content_block_delta"</span>; <span class="property">delta</span>: <span class="type">TextDelta</span> }
+  | { <span class="property">type</span>: <span class="string">"message_stop"</span> };</pre>
+            </div>
+
+            <h2 id="message-bus"><span class="section-num">8</span> Message Bus Capabilities</h2>
+            <p>MAPI supports message-oriented APIs built on brokers like NATS, MQTT, AMQP, Kafka, and Redis Streams. These APIs use named subjects (topics) instead of URL paths, and publish/reply patterns instead of HTTP request/response.</p>
+
+            <h3><span class="subsection-num">8.1</span> MSG Transport</h3>
+            <p>The <code>MSG</code> transport type describes capabilities addressed by subject name rather than URL path:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.register</span>
+<span class="property">transport:</span> <span class="string">MSG mesh.registry.register (reply)</span>
+<span class="property">auth:</span> <span class="string">required</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <p>The subject is a dot-delimited string (e.g., <code>mesh.registry.register</code>). Unlike HTTP paths, there is no method verb—the subject name itself identifies the operation.</p>
+
+            <p><strong>Parameterized subjects</strong> use the same <code>{param}</code> syntax as HTTP path parameters:</p>
+
+            <div class="code-block">
+<pre>MSG mesh.agent.{agent_id}.inbox</pre>
+            </div>
+
+            <p><strong>The <code>(reply)</code> modifier</strong> indicates the message expects a reply on an ephemeral inbox—analogous to HTTP request/response, but over a message bus. Without <code>(reply)</code>, the message is fire-and-forget (publish only).</p>
+
+            <h4>Example: Register Agent</h4>
+
+            <span class="code-label">Register Agent Capability</span>
+            <div class="code-block">
+<pre><span class="meta">## Capability: Register Agent</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.register</span>
+<span class="property">transport:</span> <span class="string">MSG mesh.registry.register (reply)</span>
+<span class="property">auth:</span> <span class="string">required</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+
+Introduces your agent to the mesh. Call this once after connecting to
+announce who you are and what you can do. The registry stores your manifest
+and makes it discoverable by other agents. You must register before other
+agents can find or communicate with you.
+
+If you've already registered, calling register again updates your manifest
+(e.g., to change availability or add skills).
+
+<span class="meta">### Logic Constraints</span>
+
+- The <span class="property">id</span> field in the manifest must match the agent's authenticated identity
+- Re-registration with the same ID replaces the existing manifest
+- After registration, send heartbeats every 30 seconds to remain online
+
+<span class="meta">### Input</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">RegisterRequest</span> {
+  <span class="property">manifest</span>: <span class="type">Manifest</span>;
+}
+<span class="keyword">```</span>
+
+<span class="meta">### Output</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">RegisterResponse</span> {
+  <span class="property">status</span>: <span class="string">"ok"</span>;
+  <span class="property">agent_id</span>: <span class="type">string</span>;
+}
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h3><span class="subsection-num">8.2</span> Inbound vs Outbound</h3>
+            <p>MAPI capabilities default to <strong>outbound</strong>—the reader calls them. But in peer-to-peer protocols, agents both send and receive. The <code>direction</code> metadata field distinguishes:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Value</th>
+                        <th>Meaning</th>
+                        <th>Code generation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>outbound</code></td>
+                        <td>You call this (default)</td>
+                        <td>Generates function calls</td>
+                    </tr>
+                    <tr>
+                        <td><code>inbound</code></td>
+                        <td>You implement a handler for this</td>
+                        <td>Generates event handlers</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>This distinction is critical for LLMs generating code: outbound capabilities become API calls, inbound capabilities become message handlers.</p>
+
+            <h4>Example: Agent Inbox (Inbound)</h4>
+
+            <span class="code-label">Inbound Capability</span>
+            <div class="code-block">
+<pre><span class="meta">## Capability: Handle Request</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.agent.inbox</span>
+<span class="property">transport:</span> <span class="string">MSG mesh.agent.{agent_id}.inbox</span>
+<span class="property">direction:</span> <span class="string">inbound</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+
+This is your agent's inbox — the subject where other agents send you work.
+When another agent discovers you and wants to use one of your skills, their
+request arrives here. You must implement a handler that:
+
+1. Reads the requested skill from the payload
+2. Routes to the appropriate skill handler
+3. Returns a response with the result (or an error)
+
+If you don't handle inbox messages, other agents can discover you but
+can't interact with you.
+
+<span class="meta">### Input</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">IncomingRequest</span> {
+  <span class="property">skill</span>: <span class="type">string</span>;        <span class="comment">// which skill the caller wants</span>
+  <span class="property">input</span>: <span class="type">unknown</span>;       <span class="comment">// skill-specific input data</span>
+  <span class="property">config</span>?: {
+    <span class="property">timeout_ms</span>?: <span class="type">number</span>;
+    <span class="property">stream</span>?: <span class="type">boolean</span>;
+    <span class="property">accepted_output</span>?: <span class="type">string</span>[];
+  };
+}
+<span class="keyword">```</span>
+
+<span class="meta">### Output</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">OutgoingResponse</span> {
+  <span class="property">status</span>: <span class="type">TaskState</span>;
+  <span class="property">message</span>?: <span class="type">string</span>;
+  <span class="property">output</span>?: <span class="type">unknown</span>;
+}
+<span class="keyword">```</span>
+
+<span class="meta">### Errors</span>
+
+- <span class="property">SKILL_NOT_FOUND</span> (<span class="type">3001</span>): You don't have the requested skill
+- <span class="property">OVERLOADED</span> (<span class="type">4001</span>): You're too busy to accept work right now</pre>
+            </div>
+
+            <h3><span class="subsection-num">8.3</span> Messaging Metadata</h3>
+            <p>Message bus capabilities support additional metadata fields for delivery semantics:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.task.update</span>
+<span class="property">transport:</span> <span class="string">MSG mesh.task.{task_id}.update</span>
+<span class="property">delivery:</span> <span class="string">at_least_once</span>
+<span class="property">ordering:</span> <span class="string">ordered</span>
+<span class="property">consumer_group:</span> <span class="string">task-processors</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Values</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>delivery</code></td>
+                        <td><code>at_most_once</code>, <code>at_least_once</code>, <code>exactly_once</code></td>
+                        <td><code>at_most_once</code></td>
+                        <td>Delivery guarantee</td>
+                    </tr>
+                    <tr>
+                        <td><code>ordering</code></td>
+                        <td><code>ordered</code>, <code>unordered</code>, <code>partition_ordered</code></td>
+                        <td><code>unordered</code></td>
+                        <td>Message ordering guarantee</td>
+                    </tr>
+                    <tr>
+                        <td><code>consumer_group</code></td>
+                        <td>string</td>
+                        <td><em>(none)</em></td>
+                        <td>Queue group for load-balanced delivery</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Delivery guarantees:</strong></p>
+            <ul>
+                <li><code>at_most_once</code> — Fire-and-forget. Message may be lost but is never duplicated.</li>
+                <li><code>at_least_once</code> — Message will be delivered but may be duplicated. Handlers should be idempotent.</li>
+                <li><code>exactly_once</code> — Message delivered exactly once. Requires broker support (e.g., NATS JetStream, Kafka transactions).</li>
+            </ul>
+
+            <p><strong>Ordering guarantees:</strong></p>
+            <ul>
+                <li><code>unordered</code> — No ordering guarantee across messages.</li>
+                <li><code>ordered</code> — Messages arrive in publish order within the subject.</li>
+                <li><code>partition_ordered</code> — Ordered within a partition key, unordered across partitions.</li>
+            </ul>
+
+            <p><strong>Consumer groups:</strong></p>
+            <p>When <code>consumer_group</code> is set, only one member of the group receives each message (load balancing). Without it, all subscribers receive every message (fan-out).</p>
+
+            <h2 id="subscriptions"><span class="section-num">9</span> Subscriptions</h2>
+            <p>Subscriptions describe a pub/sub pattern where an agent declares interest in a topic pattern and receives messages matching that pattern over time. This is distinct from WebSocket channels (connection-scoped bidirectional streams) and Webhooks (outbound HTTP callbacks).</p>
+
+            <h3><span class="subsection-num">9.1</span> SUB Transport</h3>
+            <p>Use the <code>## Subscription:</code> heading with a <code>SUB</code> transport:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.subscribe</span>
+<span class="property">transport:</span> <span class="string">SUB mesh.event.{topic}</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <h3><span class="subsection-num">9.2</span> Wildcard Syntax</h3>
+            <p>Subscription subjects support wildcards for pattern matching:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Wildcard</th>
+                        <th>Matches</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>*</code></td>
+                        <td>Exactly one token</td>
+                        <td><code>mesh.event.*</code> matches <code>mesh.event.login</code> but not <code>mesh.event.user.login</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td>One or more tokens (must be at end)</td>
+                        <td><code>mesh.event.&gt;</code> matches <code>mesh.event.login</code> and <code>mesh.event.user.login</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout tip">
+                <div class="callout-title">Broker Equivalents</div>
+                <p>MQTT uses <code>+</code> (single level) and <code>#</code> (multi level) for the same semantics. Document broker-specific syntax in Logic Constraints if it differs from MAPI's canonical wildcards.</p>
+            </div>
+
+            <h4>Example: Mesh Events</h4>
+
+            <span class="code-label">Subscription Example</span>
+            <div class="code-block">
+<pre><span class="meta">## Subscription: Mesh Events</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.subscribe</span>
+<span class="property">transport:</span> <span class="string">SUB mesh.event.{topic}</span>
+<span class="property">delivery:</span> <span class="string">at_most_once</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+
+Listens for events published by other agents on the mesh. Subscribe to a
+specific topic like <span class="string">mesh.event.scraping.profile_found</span>, or use wildcards
+to catch broader patterns:
+
+- <span class="string">mesh.event.user.*</span> — matches one level (e.g., user.login, user.logout)
+- <span class="string">mesh.event.user.&gt;</span> — matches one or more levels (e.g., user.login, user.profile.updated)
+
+Events are fire-and-forget from the publisher's perspective. You will only
+receive events for topics you've subscribed to.
+
+<span class="meta">### Logic Constraints</span>
+
+- Subscriptions are active for the duration of the agent's connection
+- Wildcard <span class="property">*</span> matches exactly one token; <span class="property">&gt;</span> matches one or more and must be at the end
+- An agent can hold multiple concurrent subscriptions
+- Events are delivered at-most-once unless backed by a persistent stream
+
+<span class="meta">### Output</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">MeshEvent</span> {
+  <span class="property">domain</span>: <span class="type">string</span>;       <span class="comment">// e.g., "scraping", "user", "system"</span>
+  <span class="property">event_type</span>: <span class="type">string</span>;   <span class="comment">// e.g., "profile_found", "login"</span>
+  <span class="property">data</span>: <span class="type">unknown</span>;        <span class="comment">// event-specific payload</span>
+}
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h2 id="websocket-channels"><span class="section-num">10</span> WebSocket Channels</h2>
+            <p>WebSocket APIs use the <code>WS</code> transport and define bidirectional message types.</p>
+
+            <div class="code-block">
+<pre><span class="meta">## Channel: Realtime Updates</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">realtime.connect</span>
+<span class="property">transport:</span> <span class="string">WS /ws/realtime</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+Establishes a persistent connection for real-time updates.
+
+<span class="meta">### Client Messages</span>
+<span class="keyword">```typescript</span>
+<span class="keyword">type</span> <span class="type">ClientMessage</span> =
+  | { <span class="property">type</span>: <span class="string">"subscribe"</span>; <span class="property">channel</span>: <span class="type">string</span> }
+  | { <span class="property">type</span>: <span class="string">"unsubscribe"</span>; <span class="property">channel</span>: <span class="type">string</span> };
+<span class="keyword">```</span>
+
+<span class="meta">### Server Messages</span>
+<span class="keyword">```typescript</span>
+<span class="keyword">type</span> <span class="type">ServerMessage</span> =
+  | { <span class="property">type</span>: <span class="string">"update"</span>; <span class="property">data</span>: <span class="type">any</span> }
+  | { <span class="property">type</span>: <span class="string">"error"</span>; <span class="property">message</span>: <span class="type">string</span> };
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h2 id="webhooks"><span class="section-num">11</span> Webhooks</h2>
+            <p>Webhooks describe outbound HTTP calls that the API makes to client-provided URLs when events occur. Use the <code>WEBHOOK</code> transport to document these callback patterns.</p>
+
+            <h3><span class="subsection-num">11.1</span> Webhook Structure</h3>
+            <p>Webhooks use a similar structure to capabilities but describe what the API sends rather than what it receives:</p>
+
+            <div class="code-block">
+<pre><span class="meta">## Webhook: Payment Completed</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">webhooks.payment_completed</span>
+<span class="property">transport:</span> <span class="string">WEBHOOK POST {callback_url}</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+Sent to your registered endpoint when a payment succeeds. Register webhook
+URLs through the Dashboard or the webhooks.register capability.
+
+<span class="meta">### Output</span>
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">PaymentWebhookPayload</span> {
+  <span class="property">event</span>: <span class="string">"payment.completed"</span>;
+  <span class="property">payload</span>: {
+    <span class="property">payment_id</span>: <span class="type">string</span>;
+    <span class="property">amount</span>: <span class="type">number</span>;
+    <span class="property">currency</span>: <span class="type">string</span>;
+    <span class="property">customer_id</span>: <span class="type">string</span>;
+  };
+  <span class="property">timestamp</span>: <span class="type">ISO8601</span>;
+  <span class="property">signature</span>: <span class="type">string</span>;  <span class="comment">// HMAC-SHA256 for verification</span>
+}
+<span class="keyword">```</span>
+
+<span class="meta">### Logic Constraints</span>
+- Webhook requests include <span class="property">X-Signature</span> header for payload verification
+- Signature is HMAC-SHA256 of the raw request body using your webhook secret
+- Requests timeout after 30 seconds; implement async processing for long tasks
+- Failed deliveries retry with exponential backoff (1min, 5min, 30min, 2hr)</pre>
+            </div>
+
+            <h3><span class="subsection-num">11.2</span> Webhook Registration</h3>
+            <p>Document the capability for registering webhook endpoints:</p>
+
+            <div class="code-block">
+<pre><span class="meta">## Capability: Register Webhook</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">webhooks.register</span>
+<span class="property">transport:</span> <span class="string">HTTP POST /webhooks</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Input</span>
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">RegisterWebhookRequest</span> {
+  <span class="property">url</span>: <span class="type">string</span>;         <span class="comment">// HTTPS endpoint to receive events</span>
+  <span class="property">events</span>: <span class="type">string</span>[];     <span class="comment">// Event types to subscribe to</span>
+  <span class="property">secret</span>?: <span class="type">string</span>;      <span class="comment">// Optional; generated if not provided</span>
+}
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h2 id="envelopes"><span class="section-num">12</span> Envelopes</h2>
+            <p>Message-oriented protocols typically wrap all messages in a standardized envelope that carries metadata, identity, tracing, and the payload. In HTTP APIs, this metadata lives in headers and status codes. In message protocols, it's part of the message body itself.</p>
+
+            <h3><span class="subsection-num">12.1</span> Envelope Structure</h3>
+            <p>Use the <code>## Envelope:</code> heading to define the wire format. Place it before capabilities, after Global Types:</p>
+
+            <span class="code-label">Envelope Definition</span>
+            <div class="code-block">
+<pre><span class="meta">## Envelope: AgentMesh Message</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">mesh.envelope</span>
+<span class="property">version:</span> <span class="string">0.1.0</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+
+Every message on the mesh—regardless of type—is wrapped in this envelope.
+The SDK constructs envelopes automatically, but understanding the structure
+is essential for debugging and reading logs.
+
+<span class="meta">### Schema</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">Envelope</span> {
+  <span class="property">v</span>: <span class="type">string</span>;              <span class="comment">// protocol version, e.g. "0.1.0"</span>
+  <span class="property">id</span>: <span class="type">string</span>;             <span class="comment">// unique message ID (UUID v7)</span>
+  <span class="property">type</span>: <span class="string">"register"</span> | <span class="string">"discover"</span> | <span class="string">"request"</span> | <span class="string">"respond"</span> | <span class="string">"emit"</span>;
+  <span class="property">ts</span>: <span class="type">ISO8601</span>;            <span class="comment">// when the message was created</span>
+  <span class="property">from</span>: <span class="type">string</span>;           <span class="comment">// sender's agent ID</span>
+  <span class="property">to</span>?: <span class="type">string</span>;            <span class="comment">// recipient agent ID (omit for events)</span>
+  <span class="property">task_id</span>?: <span class="type">string</span>;       <span class="comment">// which task this belongs to</span>
+  <span class="property">in_reply_to</span>?: <span class="type">string</span>;   <span class="comment">// ID of the message being replied to</span>
+  <span class="property">context_id</span>?: <span class="type">string</span>;    <span class="comment">// groups related tasks into a session</span>
+  <span class="property">trace</span>: {
+    <span class="property">trace_id</span>: <span class="type">string</span>;     <span class="comment">// distributed trace ID</span>
+    <span class="property">span_id</span>: <span class="type">string</span>;      <span class="comment">// this operation's span</span>
+    <span class="property">parent_span_id</span>?: <span class="type">string</span>;
+  };
+  <span class="property">payload</span>?: <span class="type">unknown</span>;      <span class="comment">// capability-specific content</span>
+  <span class="property">artifacts</span>?: <span class="type">Artifact</span>[];  <span class="comment">// file attachments or deliverables</span>
+  <span class="property">error</span>?: {
+    <span class="property">code</span>: <span class="type">number</span>;
+    <span class="property">message</span>: <span class="type">string</span>;
+    <span class="property">retryable</span>: <span class="type">boolean</span>;
+  };
+  <span class="property">meta</span>?: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">unknown</span>&gt;;
+}
+<span class="keyword">```</span>
+
+<span class="meta">### Logic Constraints</span>
+
+- The <span class="property">from</span> field is trustworthy—the transport layer verifies sender identity
+- The <span class="property">type</span> field determines which capability schema applies to <span class="property">payload</span>
+- The <span class="property">trace</span> field must always be present—create new traces for top-level operations
+- <span class="property">artifacts</span> separates deliverables from conversational messages in <span class="property">payload</span></pre>
+            </div>
+
+            <h3><span class="subsection-num">12.2</span> Envelope and Capability Composition</h3>
+            <p>When a document defines an Envelope and capabilities use <code>MSG</code> or <code>SUB</code> transport, the Capability's <strong>Input</strong> and <strong>Output</strong> schemas describe the contents of the envelope's <code>payload</code> field—not the full wire message.</p>
+
+            <p>This means an LLM generating code should:</p>
+            <ol>
+                <li>Construct the envelope (identity, tracing, type)</li>
+                <li>Place the capability's Input data into the <code>payload</code> field</li>
+                <li>Send the complete envelope over the message bus</li>
+                <li>On receipt, extract the <code>payload</code> and parse it according to the capability's Output schema</li>
+            </ol>
+
+            <h2 id="lifecycles"><span class="section-num">13</span> Lifecycles</h2>
+            <p>Many systems have stateful resources whose lifecycle spans multiple interactions. A task is created, moves through states, and eventually completes or fails. MAPI's Lifecycle section makes these state machines explicit and structured, rather than buried in prose.</p>
+
+            <h3><span class="subsection-num">13.1</span> Lifecycle Structure</h3>
+            <p>Use the <code>## Lifecycle:</code> heading with a <code>~~~states</code> fenced block:</p>
+
+            <div class="code-block">
+<pre><span class="meta">## Lifecycle: Name</span>
+
+<span class="keyword">~~~states</span>
+[state] -&gt; [state]: description
+[state] -&gt; [state]: description [optional.capability.id]
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <p>The <code>~~~states</code> block defines valid transitions. Each line is:</p>
+            <ul>
+                <li><strong>Source state</strong> &rarr; <strong>Target state</strong>: <strong>Description</strong> and optionally a <strong>capability ID</strong> in brackets that triggers the transition</li>
+            </ul>
+
+            <p>The <code>*</code> wildcard means "from any non-terminal state":</p>
+
+            <div class="code-block">
+<pre>* -&gt; canceled: Either party cancels</pre>
+            </div>
+
+            <h3><span class="subsection-num">13.2</span> States Table</h3>
+            <p>After the <code>~~~states</code> block, include a States table documenting each state:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>State</th>
+                        <th>Terminal</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>submitted</code></td>
+                        <td>no</td>
+                        <td>Task received</td>
+                    </tr>
+                    <tr>
+                        <td><code>completed</code></td>
+                        <td>yes</td>
+                        <td>Task finished successfully</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Terminal states cannot transition to any other state.</p>
+
+            <h3><span class="subsection-num">13.3</span> Task Lifecycle Example</h3>
+
+            <span class="code-label">Task Lifecycle</span>
+            <div class="code-block">
+<pre><span class="meta">## Lifecycle: Task</span>
+
+<span class="keyword">~~~states</span>
+submitted -&gt; working: Agent begins processing [mesh.task.accept]
+working -&gt; completed: Agent finishes successfully [mesh.task.respond]
+working -&gt; failed: Agent encounters an error [mesh.task.respond]
+working -&gt; input_required: Agent needs more info [mesh.task.respond]
+working -&gt; auth_required: Agent needs authorization [mesh.task.respond]
+input_required -&gt; working: Requester provides input [mesh.task.input]
+auth_required -&gt; working: Requester provides auth [mesh.task.auth]
+* -&gt; canceled: Either party cancels the task [mesh.task.cancel]
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+
+A Task is created when one agent sends a <span class="property">request</span> to another. It tracks
+the work from submission through completion (or failure). Tasks are
+identified by <span class="property">task_id</span> and their current state can be checked at any time.
+
+Use <span class="property">mesh.task.create</span> to initiate a task, and subscribe to
+<span class="property">mesh.task.{task_id}.update</span> to receive state transitions in real time.
+
+<span class="meta">### States</span>
+
+| State | Terminal | Description |
+|-------|----------|-------------|
+| <span class="property">submitted</span> | no | Task received, agent hasn't started yet |
+| <span class="property">working</span> | no | Agent is actively processing |
+| <span class="property">input_required</span> | no | Agent needs more information from the requester |
+| <span class="property">auth_required</span> | no | Agent needs permission or credentials to proceed |
+| <span class="property">completed</span> | yes | Task finished successfully; result in response payload |
+| <span class="property">failed</span> | yes | Task failed; error details in the error field |
+| <span class="property">canceled</span> | yes | Task was canceled by either party |
+
+<span class="meta">### Logic Constraints</span>
+
+- Terminal states cannot transition to any other state
+- <span class="property">* -&gt; canceled</span> means cancellation is valid from any non-terminal state
+- To retry a failed task, create a new task—link them via <span class="property">context_id</span>
+- The <span class="property">task_id</span> is immutable for the life of the task
+
+<span class="meta">### Schema</span>
+
+<span class="keyword">```typescript</span>
+<span class="keyword">interface</span> <span class="type">Task</span> {
+  <span class="property">task_id</span>: <span class="type">string</span>;
+  <span class="property">state</span>: <span class="string">"submitted"</span> | <span class="string">"working"</span> | <span class="string">"input_required"</span> | <span class="string">"auth_required"</span>
+       | <span class="string">"completed"</span> | <span class="string">"failed"</span> | <span class="string">"canceled"</span>;
+  <span class="property">created_at</span>: <span class="type">ISO8601</span>;
+  <span class="property">updated_at</span>: <span class="type">ISO8601</span>;
+  <span class="property">requester_id</span>: <span class="type">string</span>;
+  <span class="property">responder_id</span>: <span class="type">string</span>;
+  <span class="property">context_id</span>?: <span class="type">string</span>;    <span class="comment">// links related tasks</span>
+}
+<span class="keyword">```</span></pre>
+            </div>
+
+            <h2 id="internal-tools"><span class="section-num">14</span> Internal Tools</h2>
+            <p>MAPI can describe client-side or internal operations using the <code>INTERNAL</code> transport:</p>
+
+            <div class="code-block">
+<pre><span class="meta">## Tool: Calculate</span>
+
+<span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">tools.calculate</span>
+<span class="property">transport:</span> <span class="string">INTERNAL</span>
+<span class="keyword">~~~</span>
+
+<span class="meta">### Intention</span>
+Performs mathematical calculations. Use for any arithmetic the agent cannot reliably perform mentally.</pre>
+            </div>
+
+            <h2 id="collections"><span class="section-num">15</span> Collections and File Organization</h2>
+            <p>Large APIs can be split across multiple files using a collection manifest.</p>
+
+            <h3><span class="subsection-num">15.1</span> Collection Manifest</h3>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~collection</span>
+<span class="property">name:</span> <span class="string">Anthropic API</span>
+<span class="property">version:</span> <span class="string">2024-01</span>
+<span class="property">files:</span>
+  - <span class="string">messages.mapi.md</span>
+  - <span class="string">models.mapi.md</span>
+  - <span class="string">admin/users.mapi.md</span>
+<span class="property">shared_types:</span> <span class="string">types/common.mapi.md</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <h2 id="conversion"><span class="section-num">16</span> Conversion from OpenAPI/AsyncAPI</h2>
+            <p>MAPI documents can be generated from existing OpenAPI or AsyncAPI specifications.</p>
+
+            <h3><span class="subsection-num">16.1</span> OpenAPI Mapping</h3>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>OpenAPI</th>
+                        <th>MAPI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Operation (path + method)</td>
+                        <td>Capability</td>
+                    </tr>
+                    <tr>
+                        <td>operationId</td>
+                        <td>Capability id</td>
+                    </tr>
+                    <tr>
+                        <td>summary + description</td>
+                        <td>Intention</td>
+                    </tr>
+                    <tr>
+                        <td>requestBody schema</td>
+                        <td>Input interface</td>
+                    </tr>
+                    <tr>
+                        <td>response schema</td>
+                        <td>Output interface</td>
+                    </tr>
+                    <tr>
+                        <td>components/schemas</td>
+                        <td>Global Types</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="progressive-disclosure"><span class="section-num">17</span> Progressive Disclosure</h2>
+            <p>MAPI supports "reference cards"—focused, task-specific subsets of the full specification designed to minimize token usage when working with LLMs.</p>
+
+            <h3><span class="subsection-num">17.1</span> Reference Card Types</h3>
+            <ul>
+                <li><strong>Author Card:</strong> For LLMs writing MAPI specs</li>
+                <li><strong>Consumer Card:</strong> For LLMs calling APIs</li>
+                <li><strong>Conversion Card:</strong> For converting between formats</li>
+                <li><strong>Validation Card:</strong> For validating MAPI documents</li>
+            </ul>
+
+            <h3><span class="subsection-num">17.2</span> Disclosure Document</h3>
+            <p>A disclosure document helps agents determine which reference card to load:</p>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~disclosure</span>
+<span class="property">cards:</span>
+  <span class="property">author:</span>
+    <span class="property">description:</span> <span class="string">Write a new MAPI specification</span>
+    <span class="property">file:</span> <span class="string">MAPI-AUTHOR.md</span>
+  <span class="property">consumer:</span>
+    <span class="property">description:</span> <span class="string">Call an API described in MAPI format</span>
+    <span class="property">file:</span> <span class="string">MAPI-CONSUMER.md</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <h2 id="complete-examples"><span class="section-num">18</span> Complete Examples</h2>
+            <p>See the <code>/examples</code> directory for complete MAPI specifications including:</p>
+            <ul>
+                <li>Simple REST API (task management)</li>
+                <li>Streaming API (chat completion)</li>
+                <li>WebSocket API (real-time collaboration)</li>
+                <li>Mixed transport API (HTTP + WebSocket)</li>
+                <li>Message-oriented API (agent mesh)</li>
+            </ul>
+
+            <h2 id="appendix-a"><span class="section-num">A</span> Appendix A: Constraint Reference</h2>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Constraint</th>
+                        <th>Applies To</th>
+                        <th>Syntax</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Range</td>
+                        <td>number</td>
+                        <td><code>// 1-100</code></td>
+                    </tr>
+                    <tr>
+                        <td>Min only</td>
+                        <td>number</td>
+                        <td><code>// min: 0</code></td>
+                    </tr>
+                    <tr>
+                        <td>Max only</td>
+                        <td>number</td>
+                        <td><code>// max: 1000</code></td>
+                    </tr>
+                    <tr>
+                        <td>String length</td>
+                        <td>string</td>
+                        <td><code>// 1-1000 chars</code></td>
+                    </tr>
+                    <tr>
+                        <td>Format</td>
+                        <td>string</td>
+                        <td><code>// format: email</code></td>
+                    </tr>
+                    <tr>
+                        <td>Pattern</td>
+                        <td>string</td>
+                        <td><code>// pattern: ^[a-z]+$</code></td>
+                    </tr>
+                    <tr>
+                        <td>Default</td>
+                        <td>any</td>
+                        <td><code>// default: value</code></td>
+                    </tr>
+                    <tr>
+                        <td>Array bounds</td>
+                        <td>array</td>
+                        <td><code>// 1-10 items</code></td>
+                    </tr>
+                    <tr>
+                        <td>Unique items</td>
+                        <td>array</td>
+                        <td><code>// unique</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="appendix-b"><span class="section-num">B</span> Appendix B: Transport Strings</h2>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Transport</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HTTP (standard)</td>
+                        <td><code>HTTP METHOD /path</code></td>
+                        <td><code>HTTP POST /users</code></td>
+                    </tr>
+                    <tr>
+                        <td>HTTP with path params</td>
+                        <td><code>HTTP METHOD /path/{param}</code></td>
+                        <td><code>HTTP GET /users/{id}</code></td>
+                    </tr>
+                    <tr>
+                        <td>HTTP with SSE</td>
+                        <td><code>HTTP METHOD /path (SSE)</code></td>
+                        <td><code>HTTP POST /messages (SSE)</code></td>
+                    </tr>
+                    <tr>
+                        <td>WebSocket</td>
+                        <td><code>WS /path</code></td>
+                        <td><code>WS /ws/realtime</code></td>
+                    </tr>
+                    <tr>
+                        <td>Webhook (outbound)</td>
+                        <td><code>WEBHOOK METHOD {callback_url}</code></td>
+                        <td><code>WEBHOOK POST {callback_url}</code></td>
+                    </tr>
+                    <tr>
+                        <td>Internal/Client-side</td>
+                        <td><code>INTERNAL</code></td>
+                        <td><code>INTERNAL</code></td>
+                    </tr>
+                    <tr>
+                        <td>Message bus</td>
+                        <td><code>MSG subject.pattern</code></td>
+                        <td><code>MSG mesh.registry.register</code></td>
+                    </tr>
+                    <tr>
+                        <td>Message bus (parameterized)</td>
+                        <td><code>MSG subject.{param}.pattern</code></td>
+                        <td><code>MSG mesh.agent.{agent_id}.inbox</code></td>
+                    </tr>
+                    <tr>
+                        <td>Message bus (request/reply)</td>
+                        <td><code>MSG subject.pattern (reply)</code></td>
+                        <td><code>MSG mesh.registry.discover (reply)</code></td>
+                    </tr>
+                    <tr>
+                        <td>Subscribe</td>
+                        <td><code>SUB subject.pattern</code></td>
+                        <td><code>SUB mesh.event.{topic}</code></td>
+                    </tr>
+                    <tr>
+                        <td>Subscribe (wildcard)</td>
+                        <td><code>SUB subject.&gt;</code></td>
+                        <td><code>SUB mesh.event.&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="appendix-c"><span class="section-num">C</span> Appendix C: Standard Errors</h2>
+            <p>When <code>errors: standard</code> is specified, these error categories follow conventional semantics:</p>
+
+            <p><strong>HTTP transports</strong> use status codes:</p>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>When</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>400</code></td>
+                        <td>Bad Request</td>
+                        <td>Malformed JSON, invalid field values</td>
+                    </tr>
+                    <tr>
+                        <td><code>401</code></td>
+                        <td>Unauthorized</td>
+                        <td>Missing or invalid credentials</td>
+                    </tr>
+                    <tr>
+                        <td><code>403</code></td>
+                        <td>Forbidden</td>
+                        <td>Insufficient permissions</td>
+                    </tr>
+                    <tr>
+                        <td><code>404</code></td>
+                        <td>Not Found</td>
+                        <td>Resource does not exist</td>
+                    </tr>
+                    <tr>
+                        <td><code>409</code></td>
+                        <td>Conflict</td>
+                        <td>Resource state conflict</td>
+                    </tr>
+                    <tr>
+                        <td><code>422</code></td>
+                        <td>Unprocessable</td>
+                        <td>Semantically invalid</td>
+                    </tr>
+                    <tr>
+                        <td><code>429</code></td>
+                        <td>Rate Limited</td>
+                        <td>Too many requests</td>
+                    </tr>
+                    <tr>
+                        <td><code>500</code></td>
+                        <td>Server Error</td>
+                        <td>Unexpected internal error</td>
+                    </tr>
+                    <tr>
+                        <td><code>503</code></td>
+                        <td>Unavailable</td>
+                        <td>Service temporarily unavailable</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Message bus transports</strong> (MSG/SUB) use structured error objects with numeric codes. The same categories apply—a missing resource is still "not found," invalid input is still "bad request"—but the error is carried in the envelope's <code>error</code> field rather than an HTTP status code.</p>
+
+            <p>LLMs and developers understand these without explicit documentation. Only document errors with capability-specific semantics.</p>
+
+            <h2 id="appendix-d"><span class="section-num">D</span> Appendix D: Messaging Metadata Reference</h2>
+            <p>These metadata fields apply to capabilities using <code>MSG</code> or <code>SUB</code> transports. They can also be set at the document level as defaults.</p>
+
+            <h3>Delivery Guarantees</h3>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>at_most_once</code></td>
+                        <td>Fire-and-forget. Message may be lost but is never duplicated. Default.</td>
+                    </tr>
+                    <tr>
+                        <td><code>at_least_once</code></td>
+                        <td>Message will be delivered but may arrive more than once. Handlers should be idempotent.</td>
+                    </tr>
+                    <tr>
+                        <td><code>exactly_once</code></td>
+                        <td>Message delivered exactly once. Requires broker support (e.g., NATS JetStream, Kafka transactions).</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Ordering Guarantees</h3>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>unordered</code></td>
+                        <td>No ordering guarantee across messages. Default.</td>
+                    </tr>
+                    <tr>
+                        <td><code>ordered</code></td>
+                        <td>Messages arrive in publish order within the subject.</td>
+                    </tr>
+                    <tr>
+                        <td><code>partition_ordered</code></td>
+                        <td>Ordered within a partition key, unordered across partitions.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Consumer Groups</h3>
+            <p>When <code>consumer_group</code> is set to a group name, only one member of the group receives each message (load balancing). Without it, all subscribers receive every message (fan-out).</p>
+
+            <div class="code-block">
+<pre><span class="keyword">~~~meta</span>
+<span class="property">id:</span> <span class="string">tasks.process</span>
+<span class="property">transport:</span> <span class="string">SUB mesh.tasks.&gt;</span>
+<span class="property">consumer_group:</span> <span class="string">task-workers</span>
+<span class="property">delivery:</span> <span class="string">at_least_once</span>
+<span class="property">ordering:</span> <span class="string">partition_ordered</span>
+<span class="keyword">~~~</span></pre>
+            </div>
+
+            <p>In this example, incoming tasks are distributed across all agents in the <code>task-workers</code> group, delivered at least once, and ordered within each task's partition.</p>
+
+            <div class="spec-footer">
+                — End of Specification —
+            </div>
+        </main>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 MAPI Project <span class="footer-divider">|</span> <a href="../authors.html">The Authors</a></p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+
+        function toggleMobileToc() {
+            document.getElementById('mobileToc').classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

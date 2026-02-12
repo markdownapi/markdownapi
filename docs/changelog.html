@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog - Markdown API (MAPI)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #D4A03E;
+            --burnt-orange: #C85D3E;
+            --teal: #2A7B7B;
+            --olive: #5E7153;
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --charcoal: #2D2D2D;
+            --light-charcoal: #4A4A4A;
+            --sand: #E8E0D5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+        }
+
+        header .container {
+            max-width: 1100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--burnt-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--light-charcoal);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .main-nav a.nav-cta {
+            background: var(--teal);
+            color: white;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+        }
+
+        .main-nav a.nav-cta:hover {
+            background: #237070;
+            color: white;
+        }
+
+        .main-nav a.nav-cta-alt { background: var(--burnt-orange); }
+        .main-nav a.nav-cta-alt:hover { background: #A84D32; }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 200; }
+        .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--charcoal); margin: 5px 0; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--charcoal); z-index: 150; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: var(--cream); text-decoration: none; font-size: 1.5rem; font-weight: 600; padding: 1rem 2rem; min-height: 48px; display: flex; align-items: center; }
+        .mobile-menu a:hover { color: var(--mustard); }
+        .mobile-menu a.nav-cta { background: var(--teal); border-radius: 8px; font-size: 1.25rem; }
+        .mobile-menu a.nav-cta-alt { background: var(--burnt-orange); }
+
+        /* Page Header */
+        .page-header {
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.15rem;
+            color: var(--light-charcoal);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Changelog content */
+        .changelog-section {
+            padding: 2rem 0 5rem;
+        }
+
+        /* Version entry */
+        .version-entry {
+            margin-bottom: 4rem;
+        }
+
+        .version-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .version-header h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+
+        .version-date {
+            font-size: 0.95rem;
+            color: var(--light-charcoal);
+        }
+
+        .version-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            background: var(--mustard);
+            color: white;
+        }
+
+        .version-summary {
+            font-size: 1.05rem;
+            color: var(--light-charcoal);
+            margin-bottom: 2rem;
+            line-height: 1.75;
+            max-width: 750px;
+        }
+
+        /* Change group */
+        .change-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .change-group h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .change-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .change-badge.new { background: var(--teal); }
+        .change-badge.enhanced { background: var(--olive); }
+
+        .change-card {
+            background: var(--warm-white);
+            border: 1px solid var(--sand);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .change-card h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .change-card p {
+            font-size: 0.95rem;
+            color: var(--light-charcoal);
+            line-height: 1.65;
+            margin-bottom: 0.75rem;
+        }
+
+        .change-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .change-card code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: var(--sand);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: var(--burnt-orange);
+        }
+
+        .change-card .syntax-example {
+            background: #1E1E1E;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #E8E0D5;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+        .change-card .syntax-example .kw { color: #569CD6; }
+        .change-card .syntax-example .cm { color: #6A9955; }
+        .change-card .syntax-example .st { color: #CE9178; }
+        .change-card .syntax-example .pr { color: #9CDCFE; }
+        .change-card .syntax-example .ty { color: #4EC9B0; }
+        .change-card .syntax-example .mt { color: #C586C0; }
+
+        /* Motivation callout */
+        .motivation {
+            background: linear-gradient(135deg, var(--teal) 0%, #1E5F5F 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2.5rem;
+        }
+
+        .motivation h3 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .motivation p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            opacity: 0.93;
+            margin-bottom: 0.75rem;
+        }
+
+        .motivation p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Summary table */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0 2rem;
+            font-size: 0.95rem;
+        }
+
+        .summary-table th {
+            background: var(--teal);
+            color: white;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+
+        .summary-table th:first-child { border-radius: 8px 0 0 0; }
+        .summary-table th:last-child { border-radius: 0 8px 0 0; }
+
+        .summary-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--sand);
+            vertical-align: top;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background: var(--warm-white);
+        }
+
+        .summary-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+        .summary-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+        .summary-table code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: rgba(42, 123, 123, 0.1);
+            color: var(--teal);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .mobile-menu-btn { display: block; }
+            .main-nav { display: none; }
+
+            .page-header h1 { font-size: 2.25rem; }
+            .version-header h2 { font-size: 1.5rem; }
+
+            .site-footer a {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+                min-height: 44px;
+            }
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--charcoal);
+            color: var(--cream);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .site-footer a {
+            color: var(--mustard);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-divider {
+            color: rgba(255,255,255,0.3);
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container" style="max-width: 1100px;">
+            <a href="index.html" class="logo">
+                <div class="logo-mark">M</div>
+                MarkdownAPI
+            </a>
+            <nav class="main-nav">
+                <a href="getting-started.html">Get Started</a>
+                <a href="skills.html">Skills</a>
+                <a href="converter.html">Converter</a>
+                <a href="findings.html">Findings</a>
+                <a href="get-involved.html">Get Involved</a>
+                <a href="changelog.html" class="active">Changelog</a>
+                <a href="specs/mapi-specification-v0.95.html" class="nav-cta">Read Spec</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Home</a>
+        <a href="getting-started.html">Get Started</a>
+        <a href="skills.html">Skills</a>
+        <a href="converter.html">Converter</a>
+        <a href="findings.html">Findings</a>
+        <a href="get-involved.html">Get Involved</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="specs/mapi-specification-v0.95.html" class="nav-cta">Read Spec</a>
+    </div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Changelog</h1>
+                <p class="subtitle">A record of what changed in each version of the MAPI specification, why it changed, and how it works.</p>
+            </div>
+        </section>
+
+        <section class="changelog-section">
+            <div class="container">
+
+                <!-- v0.95 -->
+                <div class="version-entry">
+                    <div class="version-header">
+                        <h2>v0.95</h2>
+                        <span class="version-date">February 2026</span>
+                        <span class="version-tag">Current</span>
+                    </div>
+                    <p class="version-summary">
+                        Adds first-class support for message-oriented protocols. MAPI can now describe APIs built on NATS, MQTT, AMQP, Kafka, Redis Streams, and similar message bus infrastructure&mdash;not just HTTP. This release also introduces structured lifecycle definitions, envelope schemas, and messaging delivery metadata.
+                    </p>
+
+                    <div class="motivation">
+                        <h3>Why this release</h3>
+                        <p>MAPI v0.94 covered HTTP-centric APIs well, but a growing class of systems&mdash;particularly agent-to-agent protocols like AgentMesh&mdash;use fundamentally different communication patterns: named subjects instead of URLs, pub/sub instead of request/response, and stateful task lifecycles that span multiple messages.</p>
+                        <p>These patterns are the norm in backend event-driven architectures, not the exception. NATS, Kafka, MQTT, and AMQP collectively power more inter-service communication than REST in many organizations. MAPI's "Unified Transport" design goal demanded that these systems be describable in the same format, with the same clarity of intent, that HTTP APIs already enjoy.</p>
+                        <p>Every addition in v0.95 is additive. The HTTP-centric core of MAPI is unchanged. Existing v0.94 documents remain valid.</p>
+                    </div>
+
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Addition</th>
+                                <th>New Syntax</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Message bus transport</td>
+                                <td><code>MSG subject.pattern</code></td>
+                                <td>Describe publish/reply messaging over NATS, MQTT, Kafka, etc.</td>
+                            </tr>
+                            <tr>
+                                <td>Subscriptions</td>
+                                <td><code>## Subscription:</code> + <code>SUB</code></td>
+                                <td>Describe pub/sub topic subscriptions with wildcards</td>
+                            </tr>
+                            <tr>
+                                <td>Lifecycles</td>
+                                <td><code>## Lifecycle:</code> + <code>~~~states</code></td>
+                                <td>Define state machines for resources that span interactions</td>
+                            </tr>
+                            <tr>
+                                <td>Inbound handlers</td>
+                                <td><code>direction: inbound</code></td>
+                                <td>Distinguish "you call this" from "you handle this"</td>
+                            </tr>
+                            <tr>
+                                <td>Envelopes</td>
+                                <td><code>## Envelope:</code></td>
+                                <td>Describe the wire format wrapping all messages</td>
+                            </tr>
+                            <tr>
+                                <td>Messaging metadata</td>
+                                <td><code>delivery</code>, <code>ordering</code>, <code>consumer_group</code></td>
+                                <td>Express delivery guarantees, ordering, and load balancing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Change 1: MSG Transport -->
+                    <div class="change-group">
+                        <h3><span class="change-badge new">New</span> Message Bus Transport (Section 8)</h3>
+
+                        <div class="change-card">
+                            <h4>What it does</h4>
+                            <p>Adds a <code>MSG</code> transport type for APIs where the address is a named subject (like <code>mesh.registry.register</code>) rather than a URL path. Subjects are dot-delimited strings published to a message broker.</p>
+                            <div class="syntax-example"><span class="mt">~~~meta</span>
+<span class="pr">id:</span> <span class="st">mesh.register</span>
+<span class="pr">transport:</span> <span class="st">MSG mesh.registry.register (reply)</span>
+<span class="pr">auth:</span> <span class="st">required</span>
+<span class="mt">~~~</span></div>
+                            <p>The <code>(reply)</code> modifier indicates request/reply semantics (like HTTP request/response). Without it, the message is fire-and-forget. Parameterized subjects work like HTTP path params: <code>MSG mesh.agent.{agent_id}.inbox</code>.</p>
+                        </div>
+
+                        <div class="change-card">
+                            <h4>Why it's needed</h4>
+                            <p>MAPI v0.94 defined six transport types, all assuming HTTP endpoints or WebSocket paths. But APIs built on NATS, MQTT, AMQP, and Kafka use a different addressing model entirely&mdash;there's no URL, no HTTP method, no path. Without <code>MSG</code>, these APIs simply couldn't be described in MAPI.</p>
+                        </div>
+                    </div>
+
+                    <!-- Change 2: Subscriptions -->
+                    <div class="change-group">
+                        <h3><span class="change-badge new">New</span> Subscriptions (Section 9)</h3>
+
+                        <div class="change-card">
+                            <h4>What it does</h4>
+                            <p>Adds a <code>## Subscription:</code> heading type with a <code>SUB</code> transport for pub/sub patterns. Agents declare interest in a topic pattern and receive matching messages over time.</p>
+                            <div class="syntax-example"><span class="mt">~~~meta</span>
+<span class="pr">id:</span> <span class="st">mesh.subscribe</span>
+<span class="pr">transport:</span> <span class="st">SUB mesh.event.{topic}</span>
+<span class="mt">~~~</span></div>
+                            <p>Wildcards use NATS-style syntax: <code>*</code> matches exactly one token, <code>&gt;</code> matches one or more tokens (must be at end). MQTT equivalents (<code>+</code> and <code>#</code>) map directly.</p>
+                        </div>
+
+                        <div class="change-card">
+                            <h4>Why it's needed</h4>
+                            <p>Pub/sub is arguably more common than webhooks in backend systems. MAPI v0.94's event model was limited to webhooks (HTTP callbacks to a registered URL). But in message-oriented architectures, subscribers connect to a shared bus and declare interest in topic patterns&mdash;no callback URL, no HTTP involved. This is the dominant event model in NATS, MQTT, Kafka, Redis Pub/Sub, and RabbitMQ.</p>
+                        </div>
+                    </div>
+
+                    <!-- Change 3: Lifecycles -->
+                    <div class="change-group">
+                        <h3><span class="change-badge new">New</span> Lifecycles (Section 13)</h3>
+
+                        <div class="change-card">
+                            <h4>What it does</h4>
+                            <p>Adds a <code>## Lifecycle:</code> heading with a <code>~~~states</code> block that defines a state machine: which states a resource can be in, which transitions are valid, and optionally which capabilities trigger them.</p>
+                            <div class="syntax-example"><span class="mt">~~~states</span>
+submitted -&gt; working: Agent begins processing [mesh.task.accept]
+working -&gt; completed: Agent finishes [mesh.task.respond]
+working -&gt; failed: Agent encounters an error [mesh.task.respond]
+* -&gt; canceled: Either party cancels [mesh.task.cancel]
+<span class="mt">~~~</span></div>
+                            <p>The <code>*</code> wildcard means "from any non-terminal state." Capability IDs in brackets are optional&mdash;when present, they link transitions to specific capabilities for code generation.</p>
+                        </div>
+
+                        <div class="change-card">
+                            <h4>Why it's needed</h4>
+                            <p>Many systems have resources that transition through states over multiple interactions&mdash;tasks, orders, deployments, CI/CD pipelines. Previously, these state machines had to be described in prose within Logic Constraints, which is fragile and hard for LLMs to reason about programmatically. Structured state definitions let LLMs understand what states exist, which transitions are legal, and what "terminal" means.</p>
+                        </div>
+                    </div>
+
+                    <!-- Change 4: Inbound Handlers -->
+                    <div class="change-group">
+                        <h3><span class="change-badge new">New</span> Inbound Direction (Section 8.2)</h3>
+
+                        <div class="change-card">
+                            <h4>What it does</h4>
+                            <p>Adds a <code>direction</code> field to capability metadata. The default <code>outbound</code> means "you call this" (the existing assumption). The new <code>inbound</code> value means "you implement a handler for this"&mdash;other agents send messages here and you must respond.</p>
+                            <div class="syntax-example"><span class="mt">~~~meta</span>
+<span class="pr">id:</span> <span class="st">mesh.agent.inbox</span>
+<span class="pr">transport:</span> <span class="st">MSG mesh.agent.{agent_id}.inbox</span>
+<span class="pr">direction:</span> <span class="st">inbound</span>
+<span class="mt">~~~</span></div>
+                        </div>
+
+                        <div class="change-card">
+                            <h4>Why it's needed</h4>
+                            <p>MAPI v0.94 implicitly assumed a client-server model: the document describes a service, the reader is the client. But in peer-to-peer protocols, every agent is both client and server simultaneously. Without this distinction, an LLM can't tell whether to generate a function call (outbound) or an event handler (inbound). One metadata field solves it cleanly.</p>
+                        </div>
+                    </div>
+
+                    <!-- Change 5: Envelopes -->
+                    <div class="change-group">
+                        <h3><span class="change-badge new">New</span> Envelopes (Section 12)</h3>
+
+                        <div class="change-card">
+                            <h4>What it does</h4>
+                            <p>Adds a <code>## Envelope:</code> heading for defining the wire format that wraps all messages. In HTTP, wire format is implicit (headers, status codes). In message protocols, every message is wrapped in an envelope carrying identity, correlation IDs, tracing, and the payload.</p>
+                            <p>When an Envelope is defined, each capability's <code>Input</code> and <code>Output</code> schemas describe the contents of the envelope's <code>payload</code> field&mdash;not the full wire message. This composition rule is explicit in the spec so LLMs know to construct the envelope and nest the payload inside it.</p>
+                        </div>
+
+                        <div class="change-card">
+                            <h4>Why it's needed</h4>
+                            <p>An LLM generating code to send a message over a bus needs to construct the full envelope&mdash;not just the payload. Without a structured envelope definition, the LLM would have to guess at wire format from scattered Logic Constraints, or the spec author would have to redundantly include envelope fields in every capability's Input schema.</p>
+                        </div>
+                    </div>
+
+                    <!-- Change 6: Messaging Metadata -->
+                    <div class="change-group">
+                        <h3><span class="change-badge new">New</span> Messaging Metadata (Section 8.3, Appendix D)</h3>
+
+                        <div class="change-card">
+                            <h4>What it does</h4>
+                            <p>Adds three metadata fields for message bus capabilities:</p>
+                            <p><strong><code>delivery</code></strong> &mdash; <code>at_most_once</code> (fire-and-forget), <code>at_least_once</code> (may duplicate, use idempotency), or <code>exactly_once</code> (requires broker support like JetStream or Kafka transactions).</p>
+                            <p><strong><code>ordering</code></strong> &mdash; <code>unordered</code>, <code>ordered</code> (publish order within subject), or <code>partition_ordered</code> (ordered within partition key).</p>
+                            <p><strong><code>consumer_group</code></strong> &mdash; When set, only one member of the group receives each message (load balancing). Without it, all subscribers get every message (fan-out).</p>
+                        </div>
+
+                        <div class="change-card">
+                            <h4>Why it's needed</h4>
+                            <p>Delivery guarantees, ordering, and consumer groups are fundamental to message-oriented architectures. They affect how code must be written&mdash;at-least-once delivery means handlers must be idempotent, consumer groups mean you need graceful rebalancing, partition ordering constrains how you can parallelize. Making these explicit in metadata lets LLMs generate correct code rather than assuming defaults that may not hold.</p>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced sections -->
+                    <div class="change-group">
+                        <h3><span class="change-badge enhanced">Enhanced</span> Updated Reference Cards &amp; Conversion Guides</h3>
+
+                        <div class="change-card">
+                            <p>All seven reference cards have been updated for v0.95:</p>
+                            <p><strong>MAPI-AUTHOR</strong> &mdash; New transport strings, message bus examples, envelope/lifecycle/direction guidance.</p>
+                            <p><strong>MAPI-CONSUMER</strong> &mdash; MSG/SUB transport patterns, direction awareness, envelope composition rules.</p>
+                            <p><strong>MAPI-VALIDATOR</strong> &mdash; Validation rules for all new heading types, transport patterns, states blocks, and messaging metadata.</p>
+                            <p><strong>MAPI-AUTH</strong> &mdash; Transport-layer auth patterns for message protocols.</p>
+                            <p><strong>ASYNCAPI-TO-MAPI</strong> &mdash; Kafka/AMQP/NATS now map to <code>MSG</code>/<code>SUB</code> transports instead of the previous <code>WS</code> workaround.</p>
+                            <p><strong>MAPI-TO-OPENAPI</strong> &mdash; Guidance on handling MSG/SUB capabilities (no OpenAPI equivalent).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- v0.94 -->
+                <div class="version-entry">
+                    <div class="version-header">
+                        <h2>v0.94</h2>
+                        <span class="version-date">January 2026</span>
+                    </div>
+                    <p class="version-summary">
+                        Added cross-cutting authentication documentation. Introduced the Auth Intention section, the MAPI-AUTH reference card, and auth-related metadata fields (<code>auth_flow</code>, <code>auth_scopes</code>, <code>auth_docs_url</code>). Established the philosophy that authentication is a cross-cutting concern woven throughout capabilities, not siloed into a separate security section.
+                    </p>
+                </div>
+
+                <!-- v0.92 -->
+                <div class="version-entry">
+                    <div class="version-header">
+                        <h2>v0.92</h2>
+                        <span class="version-date">2025</span>
+                    </div>
+                    <p class="version-summary">
+                        Initial public draft of the MAPI specification. Established the core format: Markdown documents with TypeScript schemas, capability-oriented organization, metadata blocks, intention sections, logic constraints, and support for HTTP, WebSocket, SSE, and webhook transports. Introduced progressive disclosure via reference cards.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 MAPI Project <span class="footer-divider">|</span> <a href="authors.html">The Authors</a></p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            document.querySelector('.mobile-menu-btn').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

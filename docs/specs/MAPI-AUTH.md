@@ -193,6 +193,25 @@ interface CreatePaymentResponse {
 > Errors: standard (400, 401, 403, 429)
 ```
 
+## Transport-Layer Auth in Message Protocols
+
+In message-oriented APIs (NATS, MQTT, etc.), authentication often happens at the transport layer rather than per-request. The broker verifies identity on connection, and subsequent messages carry a trusted `from` field.
+
+Document this in Auth Intention:
+
+```markdown
+### Auth Intention
+
+Authentication is handled at the NATS connection level. Agents authenticate
+with the broker using credentials issued by the mesh operator. Once
+connected, the `from` field in every envelope is verified by the transport
+layer—agents cannot impersonate each other.
+
+No per-message authentication is needed after connection.
+```
+
+For APIs that mix HTTP and message transports, document both patterns.
+
 ## Common Mistakes
 
 1. **Auth in wrong place** — Use metadata for *what*, Auth Intention for *how*, Logic Constraints for *behavior*
@@ -203,6 +222,6 @@ interface CreatePaymentResponse {
 
 ---
 
-**Need more context?** See the [MAPI Specification](mapi-specification-v0.94.md) section "A Note on Authentication" for the philosophy behind this approach.
+**Need more context?** See the [MAPI Specification](mapi-specification-v0.95.md) section "A Note on Authentication" for the philosophy behind this approach.
 
 **Writing a spec?** See [MAPI-AUTHOR.md](MAPI-AUTHOR.md) for the complete authoring guide.

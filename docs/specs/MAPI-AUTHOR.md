@@ -150,6 +150,9 @@ interface ConflictError {
 | `HTTP POST /path (SSE)` | Server-Sent Events |
 | `WS /path` | WebSocket |
 | `WEBHOOK POST {callback_url}` | Outbound webhook to client URL |
+| `MSG subject.pattern` | Message bus publish |
+| `MSG subject.pattern (reply)` | Message bus request/reply |
+| `SUB subject.pattern` | Subscription (pub/sub) |
 | `INTERNAL` | Client-side, no network |
 
 ## Webhooks
@@ -180,6 +183,64 @@ interface WebhookPayload {
 - Include signature verification details
 - Document retry behavior
 ```
+
+## Message Bus Capabilities
+
+For message-oriented APIs (NATS, MQTT, Kafka, etc.), use `MSG` and `SUB` transports:
+
+```markdown
+## Capability: Publish Event
+
+~~~meta
+id: events.publish
+transport: MSG mesh.events.{topic}
+direction: outbound
+delivery: at_least_once
+~~~
+
+### Intention
+Describe the message and when to publish it.
+
+### Input
+` ` `typescript
+interface EventPayload { ... }
+` ` `
+```
+
+For subscriptions, use `## Subscription:` heading with `SUB` transport:
+```markdown
+## Subscription: Event Name
+
+~~~meta
+id: events.subscribe
+transport: SUB mesh.events.>
+~~~
+
+### Intention
+Describe what events arrive and how to handle them.
+
+### Output
+` ` `typescript
+interface IncomingEvent { ... }
+` ` `
+```
+
+## Envelopes, Lifecycles, and Direction
+
+**Envelope** (`## Envelope:`): Define the wire format wrapping all messages. Place before capabilities. Use `### Schema` with a TypeScript interface.
+
+**Lifecycle** (`## Lifecycle:`): Define state machines using `~~~states` blocks:
+```markdown
+~~~states
+submitted -> working: Agent begins [mesh.task.accept]
+working -> completed: Agent finishes [mesh.task.respond]
+* -> canceled: Either party cancels
+~~~
+```
+
+**Direction** field in `~~~meta`: Use `direction: inbound` when the capability describes something the reader must *handle* rather than *call*. Default is `outbound`.
+
+**Messaging Metadata**: For MSG/SUB transports, add `delivery`, `ordering`, and `consumer_group` fields to `~~~meta`.
 
 ## File Uploads & Binary Downloads
 
@@ -214,4 +275,4 @@ Content-Type: `application/octet-stream` or original MIME type.
 
 **Wrong card?** See [MAPI-DISCLOSURE.md](MAPI-DISCLOSURE.md) to find the right resource.
 
-**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.94.md).
+**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.95.md).

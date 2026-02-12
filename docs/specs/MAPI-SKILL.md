@@ -279,7 +279,7 @@ The Skill format uses standard MAPI syntax for all capability and schema definit
 - Intent keywords for capability matching
 - A defined agent loading flow
 
-The core MAPI specification (v0.94) remains the authoritative reference for capability syntax, metadata fields, and schema conventions.
+The core MAPI specification (v0.95) remains the authoritative reference for capability syntax, metadata fields, and schema conventions.
 
 ---
 

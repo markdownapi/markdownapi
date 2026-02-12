@@ -26,4 +26,4 @@
 
 For edge cases, ambiguity, or detailed specification questions, load the full spec:
 
-→ [mapi-specification-v0.94.md](mapi-specification-v0.94.md)
+→ [mapi-specification-v0.95.md](mapi-specification-v0.95.md)

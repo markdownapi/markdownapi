@@ -22,6 +22,9 @@ auth: required               ← Authentication needed
 - `HTTP POST /path/{id}` → Path parameter (substitute `{id}`)
 - `HTTP POST /path (SSE)` → Returns Server-Sent Events stream
 - `WS /path` → WebSocket connection
+- `MSG subject.pattern` → Publish message to subject
+- `MSG subject.pattern (reply)` → Publish and wait for reply
+- `SUB subject.pattern` → Subscribe to topic pattern (wildcards: `*` one token, `>` one-or-more)
 - `INTERNAL` → Client-side execution, no network call
 
 ## Reading Schemas
@@ -77,8 +80,20 @@ content_block_delta:
 
 Events arrive in order listed. Handle by `type` field in payload.
 
+## Message Bus
+
+If transport starts with `MSG`, you're publishing to a message bus subject instead of an HTTP endpoint.
+
+If transport includes `(reply)`, expect a response message. Without `(reply)`, it's fire-and-forget.
+
+If `direction: inbound` is set, you don't call this—you implement a handler for it. Other agents will send messages to this subject and expect you to respond.
+
+## Envelopes
+
+If the document defines an `## Envelope:` section, all messages are wrapped in that envelope. The capability's Input/Output schemas describe the `payload` field inside the envelope, not the full wire message.
+
 ---
 
 **Wrong card?** See [MAPI-DISCLOSURE.md](MAPI-DISCLOSURE.md) to find the right resource.
 
-**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.94.md).
+**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.95.md).

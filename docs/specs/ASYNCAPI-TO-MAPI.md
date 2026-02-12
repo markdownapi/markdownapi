@@ -22,7 +22,7 @@
 |-------------------|----------------|
 | `ws` / `wss` | `WS /path` |
 | `http` with SSE | `HTTP POST /path (SSE)` |
-| `kafka`, `amqp`, etc. | `WS /path` (adapt as needed) |
+| `kafka`, `amqp`, `nats`, etc. | `MSG subject` or `SUB subject` (see Section 8-9) |
 
 ## WebSocket Template
 
@@ -93,6 +93,53 @@ interface StreamRequest { ... }
 ~~~
 ```
 
+## Message Bus Template
+
+For Kafka, AMQP, NATS, and other message bus protocols:
+
+```markdown
+## Capability: {Operation Name}
+
+~~~meta
+id: {derive from channel/topic}
+transport: MSG {topic.pattern}
+delivery: at_least_once
+~~~
+
+### Intention
+
+{Describe the message and when to publish it.}
+
+### Input
+
+` ` `typescript
+// From AsyncAPI publish.message.payload
+interface MessagePayload { ... }
+` ` `
+```
+
+For subscriber/consumer patterns:
+
+```markdown
+## Subscription: {Topic Name}
+
+~~~meta
+id: {derive from channel}
+transport: SUB {topic.pattern}
+~~~
+
+### Intention
+
+{Describe what events arrive.}
+
+### Output
+
+` ` `typescript
+// From AsyncAPI subscribe.message.payload
+interface IncomingMessage { ... }
+` ` `
+```
+
 ## Converting Message Types
 
 AsyncAPI `message` with `payload` schema becomes event definition:
@@ -148,4 +195,4 @@ completed:
 
 **Wrong card?** See [MAPI-DISCLOSURE.md](MAPI-DISCLOSURE.md) to find the right resource.
 
-**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.94.md).
+**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.95.md).

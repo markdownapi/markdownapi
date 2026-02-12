@@ -120,6 +120,16 @@ OpenAPI 3.x does not support WebSocket. Options:
 
 Recommended: Generate both OpenAPI (REST) and AsyncAPI (events) from MAPI.
 
+## Handling Message Bus Capabilities
+
+MSG and SUB transport capabilities have no direct OpenAPI equivalent. Options:
+
+1. **Omit** — Skip message bus capabilities in OpenAPI output
+2. **Extension** — Preserve via `x-mapi-message` extension
+3. **Separate file** — Generate AsyncAPI for message bus channels
+
+Recommended: Generate both OpenAPI (HTTP endpoints) and AsyncAPI (message bus channels) from MAPI.
+
 ## Template
 
 ```yaml
@@ -159,4 +169,4 @@ components:
 
 **Wrong card?** See [MAPI-DISCLOSURE.md](MAPI-DISCLOSURE.md) to find the right resource.
 
-**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.94.md).
+**Need more detail?** See the full [MAPI Specification](mapi-specification-v0.95.md).
