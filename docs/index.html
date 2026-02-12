@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown API (MAPI) - Human-Readable API Specifications</title>
-    <meta name="description" content="MAPI is an API specification format designed for humans, LLMs, and traditional tooling. Readable as Markdown, optimized for AI comprehension.">
+    <title>Markdown API (MAPI) - API Docs for Coding Agents</title>
+    <meta name="description" content="MAPI is a Markdown-based API spec format that coding agents actually understand. Create API docs that Claude Code, Cursor, and Copilot can parse and act on.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://markdownapi.org/">
-    <meta property="og:title" content="Markdown API (MAPI) - API Specifications for the AI Era">
-    <meta property="og:description" content="An API specification format designed for humans, LLMs, and traditional tooling. Readable as Markdown, optimized for AI comprehension.">
+    <meta property="og:title" content="Markdown API (MAPI) - API Docs for Coding Agents">
+    <meta property="og:description" content="A Markdown-based API spec format that coding agents actually understand. Claude Code will love you for it.">
     <meta property="og:image" content="https://markdownapi.org/social-preview.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://markdownapi.org/">
-    <meta name="twitter:title" content="Markdown API (MAPI) - API Specifications for the AI Era">
-    <meta name="twitter:description" content="An API specification format designed for humans, LLMs, and traditional tooling. Readable as Markdown, optimized for AI comprehension.">
+    <meta name="twitter:title" content="Markdown API (MAPI) - API Docs for Coding Agents">
+    <meta name="twitter:description" content="A Markdown-based API spec format that coding agents actually understand. Claude Code will love you for it.">
     <meta name="twitter:image" content="https://markdownapi.org/social-preview.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,14 +123,6 @@
             color: white;
         }
 
-        .main-nav a.nav-cta-alt {
-            background: var(--burnt-orange);
-        }
-
-        .main-nav a.nav-cta-alt:hover {
-            background: #A84D32;
-        }
-
         /* Mobile Navigation */
         .mobile-menu-btn {
             display: none;
@@ -183,8 +175,6 @@
             border-radius: 8px;
             font-size: 1.25rem;
         }
-        .mobile-menu a.nav-cta-alt { background: var(--burnt-orange); }
-
         /* Hero */
         .hero {
             padding: 4rem 0 5rem;
@@ -221,33 +211,6 @@
             max-width: 700px;
             margin: 2.5rem auto 0;
             line-height: 1.75;
-        }
-
-        /* Primary CTA */
-        .primary-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: var(--burnt-orange);
-            color: white;
-            padding: 1.25rem 2.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 1.15rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(200, 93, 62, 0.3);
-        }
-
-        .primary-cta:hover {
-            background: #B54E32;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(200, 93, 62, 0.4);
-        }
-
-        .primary-cta svg {
-            width: 20px;
-            height: 20px;
         }
 
         /* Hero Button Group */
@@ -383,69 +346,6 @@
             line-height: 1.65;
         }
 
-        /* Progressive Disclosure Section */
-        .disclosure-section {
-            padding: 4rem 0;
-        }
-
-        .disclosure-box {
-            background: linear-gradient(135deg, var(--teal) 0%, #1E5F5F 100%);
-            border-radius: 24px;
-            padding: 3.5rem;
-            color: white;
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .disclosure-content h2 {
-            font-family: 'Source Serif 4', Georgia, serif;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-        }
-
-        .disclosure-content p {
-            font-size: 1.05rem;
-            line-height: 1.75;
-            opacity: 0.92;
-        }
-
-        .disclosure-visual {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .disclosure-step {
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .disclosure-step-num {
-            width: 28px;
-            height: 28px;
-            background: var(--mustard);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--charcoal);
-            flex-shrink: 0;
-        }
-
-        .disclosure-step span {
-            font-size: 0.95rem;
-        }
-
         /* Why MAPI Section */
         .why-mapi-section {
             padding: 4rem 0 5rem;
@@ -573,69 +473,6 @@
             margin: 0;
         }
 
-        /* MCP Section */
-        .mcp-section {
-            padding: 4rem 0 5rem;
-            background: var(--warm-white);
-            border-top: 1px solid var(--sand);
-        }
-
-        .comparison-card.mcp-card {
-            background: #F5F3F9;
-            border: 1px solid #D8D3E6;
-        }
-
-        .comparison-card.mcp-card h3 {
-            color: #6B5B8C;
-        }
-
-        .comparison-card.mapi-card {
-            background: #F3F8F6;
-            border: 1px solid #C5DDD5;
-        }
-
-        .comparison-card.mapi-card h3 {
-            color: var(--teal);
-        }
-
-        .card-tagline {
-            font-size: 0.9rem;
-            color: var(--light-charcoal);
-            font-style: italic;
-            margin-bottom: 1.25rem;
-            opacity: 0.85;
-        }
-
-        .mcp-callout {
-            background: linear-gradient(135deg, var(--teal) 0%, #1D5C5C 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            color: white;
-        }
-
-        .mcp-callout h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .mcp-callout p {
-            font-size: 1rem;
-            line-height: 1.65;
-            opacity: 0.95;
-            margin: 0 0 0.75rem 0;
-        }
-
-        .mcp-callout p:last-child {
-            margin-bottom: 0;
-        }
-
-        .mcp-example {
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            font-size: 0.95rem;
-        }
-
         /* Responsive */
         @media (max-width: 900px) {
             .main-nav {
@@ -643,10 +480,6 @@
             }
 
             .why-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .disclosure-box {
                 grid-template-columns: 1fr;
             }
 
@@ -670,19 +503,6 @@
 
             .hero h1 {
                 font-size: 2.25rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1.1rem;
-            }
-
-            .primary-cta {
-                padding: 1rem 2rem;
-                font-size: 1rem;
-            }
-
-            .disclosure-box {
-                padding: 2rem;
             }
 
             .site-footer a {
@@ -922,24 +742,24 @@
     <main>
         <section class="hero">
             <div class="container">
-                <div class="tagline">API specifications for the AI era</div>
-                <h1>API specs that <span>humans and machines</span> actually understand</h1>
+                <div class="tagline">Your agent can't use what it can't read</div>
+                <h1>API Docs for <span>Coding Agents</span></h1>
                 <div class="hero-buttons">
                     <a href="specs/mapi-specification-v0.95.html" class="hero-btn hero-btn-html">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
                         </svg>
-                        The Specification in HTML
+                        Read the Spec
                     </a>
-                    <a href="specs/mapi-specification-v0.95.md" class="hero-btn hero-btn-md">
+                    <a href="getting-started.html" class="hero-btn hero-btn-md">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                         </svg>
-                        The Specification in Markdown
+                        Get Started
                     </a>
                 </div>
                 <p class="hero-description">
-                    You might know them as OpenAPI documents, Swagger docs, API contracts, or API schemas—they're all ways to describe what your API does. MAPI is a Markdown-based format for writing these descriptions, designed for clarity. Specs that developers can read and LLMs can consume—no more wrestling with walls of YAML.
+                    Claude Code, Cursor, Windsurf, Copilot—they all need to understand your API to integrate it. MAPI is a Markdown-based spec format that agents actually parse well. No YAML walls. No JSON Schema mazes. Just clean, structured API docs that fit in a context window.
                 </p>
             </div>
         </section>
@@ -960,21 +780,20 @@
                     <div class="why-card">
                         <div class="why-card-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
                             </svg>
                         </div>
-                        <h3>Human-First Readability</h3>
-                        <p>Markdown is already how developers write docs. MAPI embraces that—your API specs read like documentation, not configuration files.</p>
+                        <h3>Agents Get It</h3>
+                        <p>Intentions explain <em>when</em> to call each endpoint. TypeScript interfaces define <em>what</em> to send. Your coding agent stops guessing and starts shipping.</p>
                     </div>
                     <div class="why-card">
                         <div class="why-card-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                         </div>
-                        <h3>AI-Native Design</h3>
-                        <p>TypeScript interfaces, clear intentions, and structured metadata make MAPI ideal for LLMs to parse and act upon—no hallucinated endpoints.</p>
+                        <h3>Context-Window Friendly</h3>
+                        <p>A full OpenAPI spec can burn 50K+ tokens. MAPI Skills let agents load just the capabilities they need—typically under 5KB per task.</p>
                     </div>
                     <div class="why-card">
                         <div class="why-card-icon">
@@ -982,37 +801,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                             </svg>
                         </div>
-                        <h3>Full Interoperability</h3>
-                        <p>Convert freely between MAPI, OpenAPI, and AsyncAPI. Use MAPI for authoring, export to OpenAPI when tools demand it.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="disclosure-section">
-            <div class="container">
-                <div class="disclosure-box">
-                    <div class="disclosure-content">
-                        <h2>Progressive Disclosure</h2>
-                        <p>
-                            Not everyone needs the full 30-page spec. MAPI uses reference cards—focused guides for specific tasks.
-                            Start with the disclosure document, load only what you need. This is especially powerful for AI agents:
-                            give them just the right context without overwhelming their token window.
-                        </p>
-                    </div>
-                    <div class="disclosure-visual">
-                        <div class="disclosure-step">
-                            <div class="disclosure-step-num">1</div>
-                            <span>Start with the Disclosure document to identify your task</span>
-                        </div>
-                        <div class="disclosure-step">
-                            <div class="disclosure-step-num">2</div>
-                            <span>Load the specific reference card you need</span>
-                        </div>
-                        <div class="disclosure-step">
-                            <div class="disclosure-step-num">3</div>
-                            <span>Fall back to the full spec only for edge cases</span>
-                        </div>
+                        <h3>Works With Everything</h3>
+                        <p>Author in Markdown. Convert to OpenAPI when tooling demands it. Bring in existing AsyncAPI specs. One format that bridges them all.</p>
                     </div>
                 </div>
             </div>
@@ -1021,27 +811,27 @@
         <section class="why-mapi-section" id="why-llms">
             <div class="container">
                 <div class="section-header">
-                    <h2>Why not just OpenAPI?</h2>
-                    <p>OpenAPI was built for a different era—REST resources, URL-centric design, code generators. Modern APIs have moved on. MAPI is built for how APIs actually work today.</p>
+                    <h2>Why Not Just Feed It OpenAPI?</h2>
+                    <p>You can. But your agent will burn tokens on verbose JSON Schema, miss the intent behind endpoints, and still guess wrong on edge cases. MAPI gives agents what they actually need.</p>
                 </div>
 
                 <div class="comparison-grid">
                     <div class="comparison-card problem">
-                        <h3>The OpenAPI Problem</h3>
+                        <h3>What Your Agent Sees in OpenAPI</h3>
                         <ul>
-                            <li><strong>Resource-oriented thinking</strong> — URLs as the organizing principle made sense for REST, but modern APIs are capability-oriented</li>
-                            <li><strong>No native WebSocket/SSE support</strong> — You need AsyncAPI for event-driven patterns, fragmenting your spec</li>
-                            <li><strong>Two specs to maintain</strong> — OpenAPI + AsyncAPI means duplicate schemas, drift, and confusion</li>
-                            <li><strong>Designed for machines</strong> — JSON Schema verbosity makes specs hard for humans and LLMs to parse</li>
+                            <li><strong>Verbose JSON Schema</strong> — Hundreds of lines describing a single endpoint, burning through the context window</li>
+                            <li><strong>No intent signals</strong> — The agent knows the endpoint exists but not <em>when</em> to use it or <em>why</em></li>
+                            <li><strong>Fragmented specs</strong> — REST in OpenAPI, events in AsyncAPI—your agent has to reconcile two formats</li>
+                            <li><strong>URL-oriented</strong> — Organized by paths, not by what the API actually does</li>
                         </ul>
                     </div>
                     <div class="comparison-card solution">
-                        <h3>The MAPI Approach</h3>
+                        <h3>What Your Agent Sees in MAPI</h3>
                         <ul>
-                            <li><strong>Capability-oriented</strong> — Organize by what your API does, not what URLs it exposes</li>
-                            <li><strong>Native event support</strong> — WebSockets, SSE, and streaming are first-class citizens, same spec</li>
-                            <li><strong>One unified format</strong> — REST, GraphQL, WebSocket, SSE—all in one document</li>
-                            <li><strong>Human and AI readable</strong> — Markdown + TypeScript interfaces that both developers and LLMs understand</li>
+                            <li><strong>Lean TypeScript interfaces</strong> — Clean type definitions an agent can parse in a single pass</li>
+                            <li><strong>Intentions built in</strong> — Each capability explains when to use it and when <em>not</em> to</li>
+                            <li><strong>Everything in one doc</strong> — REST, WebSocket, SSE, message bus—one format, one context load</li>
+                            <li><strong>Capability-oriented</strong> — Organized by what your API does, which is how agents think</li>
                         </ul>
                     </div>
                 </div>
@@ -1053,52 +843,13 @@
                         </svg>
                     </div>
                     <div>
-                        <h4>Built for the AI era</h4>
-                        <p>MAPI's <strong>Intentions</strong> explain when to use each capability. <strong>Logic Constraints</strong> make business rules explicit. LLMs don't hallucinate endpoints—they understand your API.</p>
+                        <h4>Claude Code will love you for it</h4>
+                        <p>Hand your coding agent a MAPI doc and watch what happens. <strong>Intentions</strong> tell it which endpoint to pick. <strong>Logic Constraints</strong> keep it from violating business rules. It stops hallucinating and starts making correct API calls.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="mcp-section" id="mapi-and-mcp">
-            <div class="container">
-                <div class="section-header">
-                    <h2>MAPI and MCP: Complementary, Not Competing</h2>
-                    <p>When people think about APIs and LLMs, they often think of MCP (Model Context Protocol). Here's how the two relate.</p>
-                </div>
-
-                <div class="comparison-grid">
-                    <div class="comparison-card mcp-card">
-                        <h3>MCP: The Runtime Protocol</h3>
-                        <p class="card-tagline">How LLMs invoke tools</p>
-                        <ul>
-                            <li><strong>Transport layer</strong> — Defines the wire format, handshake, and request/response flow</li>
-                            <li><strong>Tool invocation</strong> — How an LLM connects to and calls external capabilities</li>
-                            <li><strong>Runtime concern</strong> — Active during execution, handling the actual API calls</li>
-                            <li><strong>Analogous to</strong> — HTTP, gRPC, WebSocket protocols</li>
-                        </ul>
-                    </div>
-                    <div class="comparison-card mapi-card">
-                        <h3>MAPI & Skills: The Description Format</h3>
-                        <p class="card-tagline">How LLMs understand APIs</p>
-                        <ul>
-                            <li><strong>Documentation layer</strong> — Describes what an API does, when to use it, and why</li>
-                            <li><strong>Semantic understanding</strong> — Intentions, auth context, and business rules in prose</li>
-                            <li><strong>Progressive loading</strong> — Skills let agents load only the capabilities they need</li>
-                            <li><strong>Analogous to</strong> — OpenAPI, API documentation, developer guides</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="mcp-callout">
-                    <div class="mcp-callout-content">
-                        <h4>They work together</h4>
-                        <p>MCP tools have names and JSON schemas, but schemas don't explain <em>when</em> to choose one tool over another, <em>what scopes</em> you need, or <em>why</em> the API works the way it does. That's what MAPI provides—the semantic context that helps LLMs reason about API usage, not just execute it.</p>
-                        <p class="mcp-example">An agent reads a <strong>Skill index</strong> to choose a capability, loads just that file, then invokes via <strong>MCP</strong> or HTTP.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer class="site-footer">
