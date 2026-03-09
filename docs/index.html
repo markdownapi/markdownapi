@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown API (MAPI) - API Docs for Coding Agents</title>
-    <meta name="description" content="MAPI is a Markdown-based API spec format that coding agents actually understand. Create API docs that Claude Code, Cursor, and Copilot can parse and act on.">
+    <title>Markdown API (MAPI) - API Specs That AI Agents Actually Read</title>
+    <meta name="description" content="Document your API in MAPI format, publish it, and any AI coding agent can use it. The API specification format built for the agentic era.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://markdownapi.org/">
-    <meta property="og:title" content="Markdown API (MAPI) - API Docs for Coding Agents">
-    <meta property="og:description" content="A Markdown-based API spec format that coding agents actually understand. Claude Code will love you for it.">
+    <meta property="og:title" content="Markdown API (MAPI) - API Specs That AI Agents Actually Read">
+    <meta property="og:description" content="Document your API in MAPI format, publish it, and any AI coding agent can use it. Built for the agentic era.">
     <meta property="og:image" content="https://markdownapi.org/social-preview.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://markdownapi.org/">
-    <meta name="twitter:title" content="Markdown API (MAPI) - API Docs for Coding Agents">
-    <meta name="twitter:description" content="A Markdown-based API spec format that coding agents actually understand. Claude Code will love you for it.">
+    <meta name="twitter:title" content="Markdown API (MAPI) - API Specs That AI Agents Actually Read">
+    <meta name="twitter:description" content="Document your API in MAPI format, publish it, and any AI coding agent can use it. Built for the agentic era.">
     <meta name="twitter:image" content="https://markdownapi.org/social-preview.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -535,180 +535,103 @@
             margin: 0 1rem;
         }
 
-        /* Preview Modal */
-        .preview-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(45, 45, 45, 0.85);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+        /* How It Works */
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
 
-        .preview-modal-overlay.hidden {
-            display: none;
+        .how-step-num {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--teal);
+            margin-bottom: 0.5rem;
         }
 
-        .preview-modal {
-            background: var(--warm-white);
-            border-radius: 20px;
-            max-width: 640px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+        .how-step:nth-child(2) .how-step-num {
+            color: var(--mustard);
         }
 
-        .preview-modal-header {
-            background: var(--burnt-orange);
+        /* Messaging Announcement */
+        .messaging-section {
+            padding: 4rem 0;
+        }
+
+        .messaging-box {
+            background: linear-gradient(135deg, var(--teal) 0%, #1E5F5F 100%);
+            border-radius: 24px;
+            padding: 3.5rem;
             color: white;
-            padding: 1.5rem 2rem;
-            border-radius: 20px 20px 0 0;
-        }
-
-        .preview-modal-header h2 {
-            font-family: 'Source Serif 4', Georgia, serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 0;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
             align-items: center;
-            gap: 0.75rem;
         }
 
-        .preview-modal-header h2 svg {
-            width: 28px;
-            height: 28px;
-        }
-
-        .preview-modal-body {
-            padding: 2rem;
-        }
-
-        .preview-modal-body p {
-            color: var(--light-charcoal);
-            line-height: 1.7;
+        .messaging-box h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 600;
             margin-bottom: 1.25rem;
         }
 
-        .preview-modal-body h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--charcoal);
-            margin: 1.5rem 0 0.75rem;
+        .messaging-box > div:first-child p {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            opacity: 0.92;
         }
 
-        .preview-modal-body h3:first-of-type {
-            margin-top: 0.5rem;
+        .messaging-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-        .preview-modal-body ul {
-            margin: 0 0 1rem 0;
-            padding-left: 1.5rem;
-            color: var(--light-charcoal);
-        }
-
-        .preview-modal-body li {
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-        }
-
-        .preview-modal-body .unproven {
-            background: #FDF6F3;
-            border: 1px solid #E8D5CF;
-            border-radius: 8px;
+        .messaging-feature {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
             padding: 1rem 1.25rem;
-            margin-top: 1rem;
-        }
-
-        .preview-modal-body .unproven h3 {
-            color: var(--burnt-orange);
-            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             font-size: 0.95rem;
         }
 
-        .preview-modal-body .unproven ul {
-            margin-bottom: 0;
-        }
-
-        .preview-modal-footer {
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--sand);
-            text-align: center;
-        }
-
-        .preview-modal-btn {
-            background: var(--teal);
-            color: white;
-            border: none;
-            padding: 1rem 2.5rem;
-            border-radius: 10px;
-            font-size: 1.1rem;
+        .messaging-bullet {
+            width: 28px;
+            height: 28px;
+            background: var(--mustard);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 600;
-            cursor: pointer;
-            font-family: 'Space Grotesk', sans-serif;
-            transition: all 0.2s ease;
+            font-size: 1rem;
+            color: var(--charcoal);
+            flex-shrink: 0;
         }
 
-        .preview-modal-btn:hover {
-            background: #237070;
-            transform: translateY(-2px);
+        @media (max-width: 900px) {
+            .messaging-box {
+                grid-template-columns: 1fr;
+            }
+            .how-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 600px) {
-            .preview-modal-header {
-                padding: 1.25rem 1.5rem;
-            }
-            .preview-modal-body {
-                padding: 1.5rem;
-            }
-            .preview-modal-footer {
-                padding: 1.25rem 1.5rem;
+            .messaging-box {
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Technology Preview Modal -->
-    <div class="preview-modal-overlay" id="previewModal">
-        <div class="preview-modal">
-            <div class="preview-modal-header">
-                <h2>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                    </svg>
-                    Technology Preview
-                </h2>
-            </div>
-            <div class="preview-modal-body">
-                <p><strong>MAPI is not production-ready.</strong> We're still adding test cases and the results presented on this site are preliminary.</p>
-
-                <h3>Concepts that feel right</h3>
-                <ul>
-                    <li>Using Markdown as a descriptor format for APIs</li>
-                    <li>Using Markdown to describe the spec itself to LLMs</li>
-                    <li>Combining RESTful, Async, Webhooks, and other patterns under one format</li>
-                    <li>Allowing an API spec to be read via Progressive Disclosure</li>
-                </ul>
-
-                <div class="unproven">
-                    <h3>Might be right, but unproven</h3>
-                    <ul>
-                        <li>Using Skills (as in <a href="https://agentskills.io" target="_blank" rel="noopener">AgentSkills.io</a>) to capture an API</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="preview-modal-footer">
-                <button class="preview-modal-btn" onclick="dismissPreviewModal()">Got it</button>
-            </div>
-        </div>
-    </div>
-
     <header>
         <div class="container">
             <a href="/" class="logo">
@@ -738,25 +661,31 @@
     <main>
         <section class="hero">
             <div class="container">
-                <div class="tagline">Your agent can't use what it can't read</div>
-                <h1>API Docs for <span>Coding Agents</span></h1>
+                <div class="tagline">Two steps. That's it.</div>
+                <h1>Document your API.<br><span>Let AI agents use it.</span></h1>
+                <p class="hero-description">
+                    After you build an API, tell Claude Code to document it using Markdown API format and publish it. For any project that needs to use the API, point Claude Code at the published MAPI page. That's the whole workflow.
+                </p>
                 <div class="hero-buttons">
-                    <a href="specs/mapi-specification-v0.95.html" class="hero-btn hero-btn-html">
+                    <a href="getting-started.html" class="hero-btn hero-btn-html">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        </svg>
+                        Get Started
+                    </a>
+                    <a href="specs/mapi-specification-v0.95.html" class="hero-btn hero-btn-md">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
                         </svg>
-                        The Spec in HTML
+                        Spec (HTML)
                     </a>
-                    <a href="specs/mapi-specification-v0.95.md" class="hero-btn hero-btn-md">
+                    <a href="specs/mapi-specification-v0.95.md" class="hero-btn hero-btn-md" style="background: var(--olive); box-shadow: 0 4px 20px rgba(94, 113, 83, 0.3);">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
-                        The Spec in Markdown
+                        Spec (Markdown)
                     </a>
                 </div>
-                <p class="hero-description">
-                    Claude Code, Cursor, Windsurf, Copilot—they all need to understand your API to integrate it. MAPI is a Markdown-based spec format that agents actually parse well. No YAML walls. No JSON Schema mazes. Just clean, structured API docs that fit in a context window.
-                </p>
             </div>
         </section>
 
@@ -770,35 +699,58 @@
             </div>
         </div>
 
-        <section class="why-section">
+        <section class="why-section" id="how-it-works">
             <div class="container">
-                <div class="why-grid">
-                    <div class="why-card">
+                <div class="section-header">
+                    <h2>How it works</h2>
+                </div>
+                <div class="how-grid">
+                    <div class="why-card how-step">
                         <div class="why-card-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                             </svg>
                         </div>
-                        <h3>Agents Get It</h3>
-                        <p>Intentions explain <em>when</em> to call each endpoint. TypeScript interfaces define <em>what</em> to send. Your coding agent stops guessing and starts shipping.</p>
+                        <div class="how-step-num">Step 1</div>
+                        <h3>Document & Publish</h3>
+                        <p>You built an API. Tell Claude Code: <em>"Document this API using Markdown API format and publish it."</em> Your API is now described in a format that both humans and AI agents can read.</p>
                     </div>
-                    <div class="why-card">
-                        <div class="why-card-icon">
+                    <div class="why-card how-step">
+                        <div class="why-card-icon" style="background: var(--mustard);">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.397a4.5 4.5 0 010 6.364l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757" />
                             </svg>
                         </div>
-                        <h3>Context-Window Friendly</h3>
-                        <p>A full OpenAPI spec can burn 50K+ tokens. MAPI Skills let agents load just the capabilities they need—typically under 5KB per task.</p>
+                        <div class="how-step-num">Step 2</div>
+                        <h3>Point & Use</h3>
+                        <p>In any project that needs the API, point Claude Code at the published MAPI page. The agent reads the spec, understands the capabilities, auth, and constraints, and starts making calls.</p>
                     </div>
-                    <div class="why-card">
-                        <div class="why-card-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                            </svg>
+                </div>
+            </div>
+        </section>
+
+        <section class="messaging-section">
+            <div class="container">
+                <div class="messaging-box">
+                    <div>
+                        <h2>Now with Messaging Support</h2>
+                        <p>
+                            MAPI isn't just for HTTP. Describe APIs built on NATS, MQTT, AMQP, Kafka, Redis Streams, and other message bus infrastructure—all in the same format. One spec covers REST endpoints, WebSockets, and message queues together.
+                        </p>
+                    </div>
+                    <div class="messaging-features">
+                        <div class="messaging-feature">
+                            <div class="messaging-bullet">&bull;</div>
+                            <span>Structured lifecycle definitions for message-oriented protocols</span>
                         </div>
-                        <h3>Works With Everything</h3>
-                        <p>Author in Markdown. Convert to OpenAPI when tooling demands it. Bring in existing AsyncAPI specs. One format that bridges them all.</p>
+                        <div class="messaging-feature">
+                            <div class="messaging-bullet">&bull;</div>
+                            <span>Envelope schemas and messaging delivery metadata</span>
+                        </div>
+                        <div class="messaging-feature">
+                            <div class="messaging-bullet">&bull;</div>
+                            <span>NATS, MQTT, AMQP, Kafka, Redis Streams, and more</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -817,7 +769,7 @@
                         <ul>
                             <li><strong>Verbose JSON Schema</strong> — Hundreds of lines describing a single endpoint, burning through the context window</li>
                             <li><strong>No intent signals</strong> — The agent knows the endpoint exists but not <em>when</em> to use it or <em>why</em></li>
-                            <li><strong>Fragmented specs</strong> — REST in OpenAPI, events in AsyncAPI—your agent has to reconcile two formats</li>
+                            <li><strong>Fragmented specs</strong> — REST in OpenAPI, events in AsyncAPI, messaging nowhere—your agent has to reconcile multiple formats</li>
                             <li><strong>URL-oriented</strong> — Organized by paths, not by what the API actually does</li>
                         </ul>
                     </div>
@@ -826,7 +778,7 @@
                         <ul>
                             <li><strong>Lean TypeScript interfaces</strong> — Clean type definitions an agent can parse in a single pass</li>
                             <li><strong>Intentions built in</strong> — Each capability explains when to use it and when <em>not</em> to</li>
-                            <li><strong>Everything in one doc</strong> — REST, WebSocket, SSE, message bus—one format, one context load</li>
+                            <li><strong>Everything in one doc</strong> — REST, WebSocket, SSE, NATS, Kafka, MQTT—one format, one context load</li>
                             <li><strong>Capability-oriented</strong> — Organized by what your API does, which is how agents think</li>
                         </ul>
                     </div>
@@ -858,9 +810,6 @@
             document.querySelector('.mobile-menu-btn').classList.toggle('active');
         }
 
-        function dismissPreviewModal() {
-            document.getElementById('previewModal').classList.add('hidden');
-        }
     </script>
 </body>
 </html>
