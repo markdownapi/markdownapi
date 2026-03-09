@@ -555,6 +555,103 @@
             color: var(--mustard);
         }
 
+        /* Example Block */
+        .example-section {
+            padding: 0 0 3rem;
+        }
+
+        .example-box {
+            background: #1E1E2E;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .example-titlebar {
+            background: #16161E;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid #2A2A3C;
+        }
+
+        .example-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .example-dot:nth-child(1) { background: #FF5F57; }
+        .example-dot:nth-child(2) { background: #FEBC2E; }
+        .example-dot:nth-child(3) { background: #28C840; }
+
+        .example-titlebar span {
+            color: #6C6C8A;
+            font-size: 0.8rem;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-left: 0.5rem;
+        }
+
+        .example-body {
+            padding: 1.75rem 2rem;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .example-box h3 {
+            display: none;
+        }
+
+        .example-step {
+            margin-bottom: 1.75rem;
+        }
+
+        .example-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .example-step-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .example-step:nth-child(1) .example-step-label {
+            color: #7DC4E4;
+        }
+
+        .example-step:nth-child(2) .example-step-label {
+            color: #F5A97F;
+        }
+
+        .example-step p {
+            color: #CAD3F5;
+            font-size: 0.88rem;
+            line-height: 1.75;
+        }
+
+        .example-step a {
+            color: #8BD5CA;
+            text-decoration: none;
+        }
+
+        .example-step a:hover {
+            text-decoration: underline;
+        }
+
+        .example-step code {
+            background: #2A2A3C;
+            color: #F5BDE6;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88em;
+        }
+
         /* Messaging Announcement */
         .messaging-section {
             padding: 4rem 0;
@@ -714,6 +811,29 @@
                         <div class="how-step-num">Step 2</div>
                         <h3>Point & Use</h3>
                         <p>In any project that needs the API, point Claude Code at the published MAPI page. The agent reads the spec, understands the capabilities, auth, and constraints, and starts making calls.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="example-section">
+            <div class="container">
+                <div class="example-box">
+                    <div class="example-titlebar">
+                        <div class="example-dot"></div>
+                        <div class="example-dot"></div>
+                        <div class="example-dot"></div>
+                        <span>Example: Acme Payments API</span>
+                    </div>
+                    <div class="example-body">
+                        <div class="example-step">
+                            <div class="example-step-label">In the API project:</div>
+                            <p>"Read the MAPI spec at <a href="https://markdownapi.org/specs/mapi-specification-v0.95.md">https://markdownapi.org/specs/mapi-specification-v0.95.md</a>, then document the Payments API in <code>/src/api/</code> using that format."</p>
+                        </div>
+                        <div class="example-step">
+                            <div class="example-step-label">In any project that needs to call it:</div>
+                            <p>"Read the published MAPI doc at <a href="https://acme.dev/acme-payments.md">https://acme.dev/acme-payments.md</a> — we'll use it for payments calls later."</p>
+                        </div>
                     </div>
                 </div>
             </div>
